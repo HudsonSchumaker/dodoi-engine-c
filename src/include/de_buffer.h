@@ -1,0 +1,67 @@
+/**
+* @file buffer.h
+* @author Hudson Schumaker
+* @version 1.0.0
+*
+* Dodoi-Engine is a game engine developed by Dodoi-Lab.
+* @copyright Copyright (c) 2024, Dodoi-Lab
+*/
+#pragma once
+#include "pch.h"
+
+typedef struct {
+    GLuint id;
+} vao_t;
+
+typedef struct {
+    GLuint id;
+} vbo_t;
+
+typedef struct {
+	GLuint id;
+} ebo_t;
+
+typedef struct {
+    GLuint id;
+    char* path;
+    int width;
+    int height;
+    int channels;
+} tbo_t;
+
+
+// Vertex Array Object (VAO)
+vao_t* vao_new(void);
+void vao_init(vao_t* vao);
+void vao_bind(vao_t* vao);
+void vao_unbind(void);
+
+void vao_link_vbo_2f(vao_t* vao, vbo_t* vbo, const GLuint layout);
+void vao_link_vbo_3f(vao_t* vao, vbo_t* vbo, const GLuint layout);
+void vao_link_vbo_4f(vao_t* vao, vbo_t* vbo, const GLuint layout);
+void vao_link_vbo_3f2f(vao_t* vao, vbo_t* vbo);
+void vao_link_vbo_3f3f(vao_t* vao, vbo_t* vbo);
+void vao_link_vbo_3f2f3f(vao_t* vao, vbo_t* vbo);
+void vao_link_vbo_3f3f2f(vao_t* vao, vbo_t* vbo);
+void vao_link_vbo_3f3f3f(vao_t* vao, vbo_t* vbo);
+
+void vao_link_ebo(vao_t* vao, ebo_t* ebo);
+
+void vao_delete(vao_t* vao);
+void vao_destroy(vao_t* vao);
+
+// Vertex Buffer Object (VBO)
+vbo_t* vbo_new(void);
+void vbo_init(vbo_t* vbo, GLfloat* vertices, GLsizeiptr size);
+void vbo_bind(vbo_t* vbo);
+void vbo_unbind(void);
+void vbo_delete(vbo_t* vbo);
+void vbo_destroy(vbo_t* vbo);
+
+// Element Buffer Object (EBO)
+ebo_t* ebo_new(void);
+void ebo_init(ebo_t* ebo, GLuint* indices, GLsizeiptr size);
+void ebo_bind(ebo_t* ebo);
+void ebo_unbind(void);
+void ebo_delete(ebo_t* ebo);
+void ebo_destroy(ebo_t* ebo);
