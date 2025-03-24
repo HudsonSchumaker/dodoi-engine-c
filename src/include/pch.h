@@ -39,6 +39,12 @@
 #define DIV_PI_180 (PI / 180.0f)
 #define DIV_180_PI (180.0f / PI)
 
+// 3D constants
+#define STRIDE_3_2 5
+#define STRIDE_3_3 6
+#define STRIDE_3_3_2 8
+#define STRIDE_3_3_3 9
+
 // Dodoi-Engine folders
 #define MAP_FOLDER "./data/maps/"
 #define OBJ_FOLDER "./data/models/"
