@@ -77,4 +77,3 @@ vec3_t* fps_camera_get_look(fps_camera_t* camera) {
 vec3_t* fps_camera_get_right(fps_camera_t* camera) {
 	return &camera->right;
 }
-
