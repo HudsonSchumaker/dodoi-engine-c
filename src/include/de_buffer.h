@@ -65,3 +65,13 @@ void ebo_bind(ebo_t* ebo);
 void ebo_unbind(void);
 void ebo_delete(ebo_t* ebo);
 void ebo_destroy(ebo_t* ebo);
+
+// Texture Buffer Object (TBO)
+tbo_t* tbo_new(void);
+void tbo_init(tbo_t* tbo, const char* path);
+void tbo_bind(tbo_t* tbo);
+bool tbo_load(tbo_t* tbo);
+void tbo_map_texture(tbo_t* tbo, GLuint texture_unit);
+void tbo_unbind(void);
+void tbo_delete(tbo_t* tbo);
+void tbo_destroy(tbo_t* tbo);
