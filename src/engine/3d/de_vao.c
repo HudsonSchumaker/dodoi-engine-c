@@ -134,7 +134,7 @@ void vao_link_vbo_3f3f3f(vao_t* vao, vbo_t* vbo) {
 }
 
 void vao_link_ebo(vao_t* vao, ebo_t* ebo) {
-
+	// TODO
 }
 
 void vao_unbind(void) {
