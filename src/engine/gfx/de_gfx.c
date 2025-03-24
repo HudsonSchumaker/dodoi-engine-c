@@ -15,7 +15,7 @@ static int GFX_WINDOW_HEIGHT = 0;
 
 void gfx_init(bool fullscreen, bool vsync) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-        fprintf(stderr, "failed to init SDL2: %s\n", SDL_GetError());
+        fprintf(stderr, "failed to init SDL2: %s.\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
@@ -38,7 +38,7 @@ void gfx_init(bool fullscreen, bool vsync) {
 
     // Create SDL2 window
     window = SDL_CreateWindow(
-        "C SDL2 GLAD OpenGL",
+        WINDOW_TITLE,
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH,
@@ -47,7 +47,7 @@ void gfx_init(bool fullscreen, bool vsync) {
     );
 
     if (window == NULL) {
-        fprintf(stderr, "failed to create SDL2 window: %s\n", SDL_GetError());
+        fprintf(stderr, "failed to create SDL2 window: %s.\n", SDL_GetError());
         SDL_Quit();
         exit(EXIT_FAILURE);
     }
@@ -64,7 +64,7 @@ void gfx_init(bool fullscreen, bool vsync) {
     // SDL_GLContext is an alias for "void*"
     context = SDL_GL_CreateContext(window);
     if (context == NULL) {
-        fprintf(stderr, "failed to create open_gl context: %s\n", SDL_GetError());
+        fprintf(stderr, "failed to create open_gl context: %s.\n", SDL_GetError());
         SDL_DestroyWindow(window);
         SDL_Quit();
         exit(EXIT_FAILURE);
@@ -139,6 +139,6 @@ void gfx_open_gl_info(void) {
     // Print each extension
     for (GLint i = 0; i < numExtensions; i++) {
         const char* extension = (const char*)glGetStringi(GL_EXTENSIONS, i);
-        printf("OpenGL Extension #%d: %s\n", i, extension);
+        printf("OpenGL Extension #%d: %s.\n", i, extension);
     }
 }
