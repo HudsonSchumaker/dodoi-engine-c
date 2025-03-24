@@ -140,6 +140,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\3d\de_ebo.c" />
+    <ClCompile Include="src\engine\3d\de_program.c" />
+    <ClCompile Include="src\engine\3d\de_shader.c" />
+    <ClCompile Include="src\engine\3d\de_tbo.c" />
     <ClCompile Include="src\engine\3d\de_vao.c" />
     <ClCompile Include="src\engine\3d\de_vbo.c" />
     <ClCompile Include="src\engine\core\de_fps_camera.c" />
@@ -164,6 +168,16 @@
     <ClInclude Include="src\include\pch.h" />
     <ClInclude Include="src\include\de_util.h" />
     <ClInclude Include="src\include\de_vector.h" />
+    <ClInclude Include="src\include\de_program.h" />
+    <ClInclude Include="src\include\de_shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
