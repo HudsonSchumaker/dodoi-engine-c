@@ -34,3 +34,11 @@ mat3_t mat3_mul_mat3(mat3_t* a, mat3_t* b) {
 	}
 	return m;
 }
+
+void mat3_to_array(const mat3_t* mat, float* array) {
+	for (byte i = 0; i < 3; i++) {
+		for (byte j = 0; j < 3; j++) {
+			array[j * 3 + i] = mat->m[i][j]; // column-major order
+		}
+	}
+}
