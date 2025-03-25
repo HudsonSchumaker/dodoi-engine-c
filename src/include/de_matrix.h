@@ -24,6 +24,7 @@ typedef struct {
 mat3_t mat3_identity(void);
 vec3_t mat3_mul_vec3(mat3_t* m, vec3_t* v);
 mat3_t mat3_mul_mat3(mat3_t* a, mat3_t* b);
+void mat3_to_array(const mat3_t* mat, float* array);
 
 ////////////////////////////////////////
 // Mat4 functions
