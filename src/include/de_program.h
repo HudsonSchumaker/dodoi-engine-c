@@ -19,13 +19,14 @@ program_t* program_new(void);
 void program_init(program_t* program);
 bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar* fragment_path);
 bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragment_shader);
-bool saveBinary(const char* binary_path);
-bool loadBinary(const char* binray_Path);
+bool program_save_binary(const char* binary_path);
+bool program_load_binary(const char* binray_Path);
 
-void program_bind(program_t* program);
-void program_unbind(void);
+void program_set(program_t* program);
+void program_unset(void);
 void program_delete(program_t* program);
 void program_destroy(program_t* program);
+void program_detach_shader(program_t* program, shader_t* shader);
 
 GLint program_get_uniform_location(program_t* program, const GLchar* name);
 void program_set_uniform1i(GLint location, GLint value);
@@ -33,4 +34,5 @@ void program_set_uniform1f(GLint location, GLfloat value);
 void program_set_uniform2f(GLint location, GLfloat x, GLfloat y);
 void program_set_uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z);
 void program_set_uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+void program_set_uniform_mat3f(GLint location, const mat3_t* matrix);
 void program_set_uniform_mat4f(GLint location, const mat4_t* matrix);
