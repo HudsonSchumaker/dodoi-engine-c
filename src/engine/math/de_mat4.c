@@ -166,8 +166,8 @@ mat4_t mat4_look_at(vec3_t* eye, vec3_t* target, vec3_t* up) {
 }
 
 void mat4_to_array(const mat4_t* mat, float* array) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
+    for (byte i = 0; i < 4; i++) {
+        for (byte j = 0; j < 4; j++) {
             array[j * 4 + i] = mat->m[i][j]; // column-major order
         }
     }
