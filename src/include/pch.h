@@ -9,6 +9,7 @@
 #pragma once
 #include <math.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
@@ -25,7 +26,7 @@
 #define WINDOW_HEIGHT 720
 #define WINDOW_H_WIDTH WINDOW_WIDTH / 2
 #define WINDOW_H_HEIGHT WINDOW_HEIGHT / 2
-#define WINDOW_TITLE "Dodoi-Engine"
+#define WINDOW_TITLE "Dodoi-Engine-C-Sdl2-Glad-OpenGL-4.1-HD"
 
 // Math constants
 #define VEC2 2
@@ -40,10 +41,16 @@
 #define DIV_180_PI (180.0f / PI)
 
 // 3D constants
-#define STRIDE_3_2 5
-#define STRIDE_3_3 6
-#define STRIDE_3_3_2 8
-#define STRIDE_3_3_3 9
+#define FOV 60.0f
+#define STRIDE_2f 2 * sizeof(GLfloat)
+#define STRIDE_3f 3 * sizeof(GLfloat)
+#define STRIDE_4f 4 * sizeof(GLfloat)
+#define STRIDE_5f 5 * sizeof(GLfloat)
+#define STRIDE_6f 6 * sizeof(GLfloat)
+#define STRIDE_3f_2f 5 * sizeof(GLfloat)
+#define STRIDE_3f_3f 6 * sizeof(GLfloat)
+#define STRIDE_3f_3f_2f 8 * sizeof(GLfloat)
+#define STRIDE_3f_3f_3f 9 * sizeof(GLfloat)
 
 // Dodoi-Engine folders
 #define MAP_FOLDER "./data/maps/"

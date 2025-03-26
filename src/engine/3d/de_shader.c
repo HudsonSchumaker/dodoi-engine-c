@@ -79,8 +79,8 @@ char* shader_load_file(const char* path) {
         return NULL;
     }
 
-    fread(buffer, 1, length + 1, file);
-    buffer[length] = '\0';
+    size_t read_length = fread(buffer, 1, length, file);
+    buffer[read_length] = '\0';
     
     fclose(file);
     return buffer;
