@@ -19,8 +19,8 @@ program_t* program_new(void);
 void program_init(program_t* program);
 bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar* fragment_path);
 bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragment_shader);
-bool program_save_binary(const char* binary_path);
-bool program_load_binary(const char* binray_Path);
+bool program_save_binary(program_t* program, const char* binary_path);
+program_t* program_load_binary(const char* binray_Path);
 
 void program_set(program_t* program);
 void program_unset(void);

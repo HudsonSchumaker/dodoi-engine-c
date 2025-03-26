@@ -14,11 +14,15 @@ program_t* program_new(void) {
 		fprintf(stderr, "failed to allocate memory for program.\n");
 		exit(EXIT_FAILURE);
 	}
+	program_init(program);
 	return program;
 }
 
 void program_init(program_t* program) {
 	program->id = glCreateProgram();
+	if (program->id == 0) {
+		fprintf(stderr, "failed to create program.\n");
+	}
 }
 
 bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar* fragment_path) {
@@ -47,6 +51,81 @@ bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar
 	return true;
 }
 
+bool program_save_binary(program_t* program, const char* binary_path) {
+	GLint binary_length = 0;
+	GLenum binary_format;
+
+	// Get the length of the binary
+	glGetProgramiv(program->id, GL_PROGRAM_BINARY_LENGTH, &binary_length);
+	if (binary_length == 0) {
+		fprintf(stderr, "failed to get program binary length.\n");
+		return false;
+	}
+
+	// Allocate memory for the binary
+	GLvoid* binary = malloc(binary_length);
+	if (binary == NULL) {
+		fprintf(stderr, "failed to allocate memory for program binary.\n");
+		return false;
+	}
+
+	// Get the binary data
+	glGetProgramBinary(program->id, binary_length, NULL, &binary_format, binary);
+
+	// Open the file for writing
+	FILE* file = fopen(binary_path, "wb");
+	if (file == NULL) {
+		fprintf(stderr, "failed to open file for writing: %s.\n", binary_path);
+		free(binary);
+		return false;
+	}
+
+	// Write the binary format and length to the file
+	fwrite(&binary_format, sizeof(GLenum), 1, file);
+	fwrite(&binary_length, sizeof(GLint), 1, file);
+
+	// Write the binary data to the file
+	fwrite(binary, 1, binary_length, file);
+
+	// Clean up
+	fclose(file);
+	free(binary);
+
+	return true;
+}
+
+program_t* program_load_binary(const char* binray_Path) {
+	// Open the file for reading
+	FILE* file = fopen(binray_Path, "rb");
+	if (file == NULL) {
+		fprintf(stderr, "failed to open file for reading: %s.\n", binray_Path);
+		return NULL;
+	}
+	// Read the binary format and length from the file
+	GLenum binary_format;
+	GLint binary_length;
+	fread(&binary_format, sizeof(GLenum), 1, file);
+	fread(&binary_length, sizeof(GLint), 1, file);
+	// Allocate memory for the binary
+	GLvoid* binary = malloc(binary_length);
+	if (binary == NULL) {
+		fprintf(stderr, "failed to allocate memory for program binary.\n");
+		fclose(file);
+		return NULL;
+	}
+	// Read the binary data from the file
+	fread(binary, 1, binary_length, file);
+	// Create a new program
+	program_t* program = program_new();
+	program_init(program);
+	// Load the binary data into the program
+	glProgramBinary(program->id, binary_format, binary, binary_length);
+	// Clean up
+	fclose(file);
+	free(binary);
+	return program;
+}
+
 bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragment_shader) {
 	glAttachShader(program->id, vertex_shader->id);
 	glAttachShader(program->id, fragment_shader->id);
@@ -55,12 +134,24 @@ bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragmen
 	GLint result;
 	glGetProgramiv(program->id, GL_LINK_STATUS, &result);
 	if (result != GL_TRUE) {
-		GLint info_log_length;
-		glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &info_log_length);
-		GLchar* info_log = malloc(info_log_length);
-		glGetProgramInfoLog(program->id, info_log_length, NULL, info_log);
-		fprintf(stderr, "failed to link program: %s.\n", info_log);
-		free(info_log);
+		GLint length;
+		glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &length);
+
+		if (length > 0) {
+			GLchar* info_log = (GLchar*)malloc(length);
+			if (info_log != NULL) {
+				glGetProgramInfoLog(program->id, length, NULL, info_log);
+				fprintf(stderr, "error when linking program: %s.\n", info_log);
+				free(info_log);
+			}
+			else {
+				fprintf(stderr, "failed to allocate memory for program info log.\n");
+			}
+			free(info_log);
+		}
+		else {
+			fprintf(stderr, "failed to link program: (no log available).\n");
+		}
 		return false;
 	}
 	return true;
