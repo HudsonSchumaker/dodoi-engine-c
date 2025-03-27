@@ -12,7 +12,7 @@ vec4_t vec4_zero(void) {
     return vec4_new(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
-vec4_t vec4_new(float x, float y, float z, float w) {
+vec4_t vec4_new(const float x, const float y, const float z, const float w) {
     vec4_t new_vec4 = {
         .x = x,
         .y = y,
@@ -23,14 +23,14 @@ vec4_t vec4_new(float x, float y, float z, float w) {
     return new_vec4;
 }
 
-vec4_t vec4_clone(vec4_t* v) {
+vec4_t vec4_clone(const vec4_t* v) {
     return vec4_new(v->x, v->y, v->z, v->w);
 }
 
-vec2_t vec4_to_vec2(vec4_t* v) {
+vec2_t vec4_to_vec2(const vec4_t* v) {
     return vec2_new(v->x, v->y);
 }
 
-vec3_t vec4_to_vec3(vec4_t* v) {
+vec3_t vec4_to_vec3(const vec4_t* v) {
     return vec3_new(v->x, v->y, v->z);
 }
