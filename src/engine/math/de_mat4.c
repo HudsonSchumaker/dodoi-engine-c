@@ -22,7 +22,7 @@ mat4_t mat4_identity(void) {
     return m;
 }
 
-mat4_t mat4_make_scale(float sx, float sy, float sz) {
+mat4_t mat4_make_scale(const float sx, const float sy, const float sz) {
     // | sx  0  0  0 |
     // |  0 sy  0  0 |
     // |  0  0 sz  0 |
@@ -34,7 +34,7 @@ mat4_t mat4_make_scale(float sx, float sy, float sz) {
     return m;
 }
 
-mat4_t mat4_make_translation(float tx, float ty, float tz) {
+mat4_t mat4_make_translation(const float tx, const float ty, const float tz) {
     // | 1  0  0  tx |
     // | 0  1  0  ty |
     // | 0  0  1  tz |
@@ -46,9 +46,9 @@ mat4_t mat4_make_translation(float tx, float ty, float tz) {
     return m;
 }
 
-mat4_t mat4_make_rotation_x(float angle) {
-    float c = cosf(angle);
-    float s = sinf(angle);
+mat4_t mat4_make_rotation_x(const float rx) {
+    float c = cosf(rx);
+    float s = sinf(rx);
     // | 1  0  0  0 |
     // | 0  c -s  0 |
     // | 0  s  c  0 |
@@ -61,9 +61,9 @@ mat4_t mat4_make_rotation_x(float angle) {
     return m;
 }
 
-mat4_t mat4_make_rotation_y(float angle) {
-    float c = cosf(angle);
-    float s = sinf(angle);
+mat4_t mat4_make_rotation_y(const float ry) {
+    float c = cosf(ry);
+    float s = sinf(ry);
     // |  c  0  s  0 |
     // |  0  1  0  0 |
     // | -s  0  c  0 |
@@ -76,9 +76,9 @@ mat4_t mat4_make_rotation_y(float angle) {
     return m;
 }
 
-mat4_t mat4_make_rotation_z(float angle) {
-    float c = cosf(angle);
-    float s = sinf(angle);
+mat4_t mat4_make_rotation_z(const float rz) {
+    float c = cosf(rz);
+    float s = sinf(rz);
     // | c -s  0  0 |
     // | s  c  0  0 |
     // | 0  0  1  0 |
@@ -91,8 +91,8 @@ mat4_t mat4_make_rotation_z(float angle) {
     return m;
 }
 
-vec4_t mat4_mul_vec4(mat4_t* m, vec4_t* v) {
-    vec4_t result = vec4_zero();
+vec4_t mat4_mul_vec4(const mat4_t* m, const vec4_t* v) {
+    vec4_t result;
     result.x = m->m[0][0] * v->x + m->m[0][1] * v->y + m->m[0][2] * v->z + m->m[0][3] * v->w;
     result.y = m->m[1][0] * v->x + m->m[1][1] * v->y + m->m[1][2] * v->z + m->m[1][3] * v->w;
     result.z = m->m[2][0] * v->x + m->m[2][1] * v->y + m->m[2][2] * v->z + m->m[2][3] * v->w;
@@ -100,7 +100,27 @@ vec4_t mat4_mul_vec4(mat4_t* m, vec4_t* v) {
     return result;
 }
 
-mat4_t mat4_mul_mat4(mat4_t* a, mat4_t* b) {
+vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v) {
+    vec4_t result;
+    __m128 col1 = _mm_load_ps(&m->m[0][0]);
+    __m128 col2 = _mm_load_ps(&m->m[1][0]);
+    __m128 col3 = _mm_load_ps(&m->m[2][0]);
+    __m128 col4 = _mm_load_ps(&m->m[3][0]);
+
+    __m128 vec = _mm_set_ps(v->w, v->z, v->y, v->x);
+
+    __m128 res = _mm_add_ps(
+        _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x00), col1),
+            _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x55), col2)),
+        _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xAA), col3),
+            _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xFF), col4))
+    );
+
+    _mm_store_ps(&result.x, res);
+    return result;
+}
+
+mat4_t mat4_mul_mat4(const mat4_t* a, const mat4_t* b) {
     mat4_t m;
     for (byte i = 0; i < 4; i++) {
         for (byte j = 0; j < 4; j++) {
@@ -110,7 +130,29 @@ mat4_t mat4_mul_mat4(mat4_t* a, mat4_t* b) {
     return m;
 }
 
-mat4_t mat4_perspective(float fov, float aspect, float znear, float zfar) {
+mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b) {
+    mat4_t result;
+    __m128 row1 = _mm_load_ps(&b->m[0][0]);
+    __m128 row2 = _mm_load_ps(&b->m[1][0]);
+    __m128 row3 = _mm_load_ps(&b->m[2][0]);
+    __m128 row4 = _mm_load_ps(&b->m[3][0]);
+
+    for (byte i = 0; i < 4; i++) {
+        __m128 brod1 = _mm_set1_ps(a->m[i][0]);
+        __m128 brod2 = _mm_set1_ps(a->m[i][1]);
+        __m128 brod3 = _mm_set1_ps(a->m[i][2]);
+        __m128 brod4 = _mm_set1_ps(a->m[i][3]);
+
+        __m128 res = _mm_add_ps(
+            _mm_add_ps(_mm_mul_ps(brod1, row1), _mm_mul_ps(brod2, row2)),
+            _mm_add_ps(_mm_mul_ps(brod3, row3), _mm_mul_ps(brod4, row4))
+        );
+        _mm_store_ps(&result.m[i][0], res);
+    }
+    return result;
+}
+
+mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
     // | (h/w)*1/tan(fov/2)             0              0                 0 |
     // |                  0  1/tan(fov/2)              0                 0 |
     // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
@@ -127,7 +169,7 @@ mat4_t mat4_perspective(float fov, float aspect, float znear, float zfar) {
     return m;
 }
 
-mat4_t mat4_orthographic(float left, float right, float bottom, float top, float z_near, float z_far) {
+mat4_t mat4_orthographic(const float left, const float right, const float bottom, const float top, const float z_near, const float z_far) {
     // | 2/(r-l)    0        0    -(r+l)/(r-l) |
     // |    0     2/(t-b)    0    -(t+b)/(t-b) |
     // |    0       0    -2/(f-n) -(f+n)/(f-n) |
@@ -144,7 +186,7 @@ mat4_t mat4_orthographic(float left, float right, float bottom, float top, float
     return m;
 }
 
-mat4_t mat4_look_at(vec3_t* eye, vec3_t* target, vec3_t* up) {
+mat4_t mat4_look_at(const vec3_t* eye, const vec3_t* target, const vec3_t* up) {
     // Compute the forward (z), right (x), and up (y) vectors
     vec3_t z = vec3_sub(target, eye);
     vec3_normalize(&z);
@@ -156,12 +198,12 @@ mat4_t mat4_look_at(vec3_t* eye, vec3_t* target, vec3_t* up) {
     // | y.x   y.y   y.z  -dot(y,eye) |
     // | z.x   z.y   z.z  -dot(z,eye) |
     // | 0.0f  0.0f  0.0f    1.0f     |
-    mat4_t view_matrix = { {
+    mat4_t view_matrix = {{
         { x.x, x.y, x.z, -vec3_dot(&x, eye) },
         { y.x, y.y, y.z, -vec3_dot(&y, eye) },
         { z.x, z.y, z.z, -vec3_dot(&z, eye) },
         { 0.0f, 0.0f, 0.0f,    1.0f         }
-    } };
+    }};
     return view_matrix;
 }
 

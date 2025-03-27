@@ -17,7 +17,7 @@ mat3_t mat3_identity(void) {
 	return m;
 }
 
-vec3_t mat3_mul_vec3(mat3_t* m, vec3_t* v) {
+vec3_t mat3_mul_vec3(const mat3_t* m, const vec3_t* v) {
 	vec3_t result = vec3_zero();
 	result.x = m->m[0][0] * v->x + m->m[0][1] * v->y + m->m[0][2] * v->z;
 	result.y = m->m[1][0] * v->x + m->m[1][1] * v->y + m->m[1][2] * v->z;
@@ -25,7 +25,7 @@ vec3_t mat3_mul_vec3(mat3_t* m, vec3_t* v) {
 	return result;
 }
 
-mat3_t mat3_mul_mat3(mat3_t* a, mat3_t* b) {
+mat3_t mat3_mul_mat3(const mat3_t* a, const mat3_t* b) {
 	mat3_t m;
 	for (byte i = 0; i < 3; i++) {
 		for (byte j = 0; j < 3; j++) {
