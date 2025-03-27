@@ -9,14 +9,14 @@
 #include "../../include/de_util.h"
 #include "../../include/de_camera.h"
 
-fps_camera_t* fps_camera_new(void) {
+fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
 	fps_camera_t* camera = (fps_camera_t*)malloc(sizeof(fps_camera_t));
 	if (camera == NULL) {
 		fprintf(stderr, "failed to allocate memory for fps camera.\n");
 		exit(EXIT_FAILURE);
 	}
-	camera->coords.eye    = vec3_zero();
-	camera->coords.target = vec3_zero();
+	camera->coords.eye    = position;
+	camera->coords.target = target;
 	camera->coords.up     = vec3_up();
 	camera->coords.yaw   = 0.0f;
 	camera->coords.pitch = 0.0f;
@@ -57,7 +57,8 @@ void fps_camera_set_position(fps_camera_t* camera, vec3_t position) {
 }
 
 void fps_camera_set_rotation(fps_camera_t* camera, float yaw, float pitch) {
-	camera->coords.yaw   = deg_to_rad(yaw);
+	camera->coords.yaw   += deg_to_rad(yaw);
+	camera->coords.pitch += deg_to_rad(pitch);
 	camera->coords.pitch = clampf(deg_to_rad(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
 
 	if (camera->coords.yaw >  TWO_PI) {
