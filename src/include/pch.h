@@ -14,6 +14,8 @@
 #include <string.h>
 #include <windows.h>
 #include <stdbool.h>
+#include <xmmintrin.h>
+#include <immintrin.h>
 #include <glad/glad.h>
 
 // SDL2
