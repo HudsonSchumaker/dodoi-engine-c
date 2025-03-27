@@ -14,7 +14,6 @@ vbo_t* vbo_new(void) {
 		fprintf(stderr, "failed to allocate memory for vbo.\n");
 		exit(EXIT_FAILURE);
 	}
-	vbo_init(vbo, NULL, 0);
 	return vbo;
 }
 
