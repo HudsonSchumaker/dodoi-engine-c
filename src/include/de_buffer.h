@@ -46,7 +46,6 @@ void vao_link_vbo_3f3f2f(vao_t* vao, vbo_t* vbo);
 void vao_link_vbo_3f3f3f(vao_t* vao, vbo_t* vbo);
 
 void vao_link_ebo(vao_t* vao, ebo_t* ebo);
-
 void vao_delete(vao_t* vao);
 void vao_destroy(vao_t* vao);
 
