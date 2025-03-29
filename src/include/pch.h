@@ -26,8 +26,8 @@
 // Window settings
 #define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
-#define WINDOW_H_WIDTH WINDOW_WIDTH / 2
-#define WINDOW_H_HEIGHT WINDOW_HEIGHT / 2
+#define WINDOW_H_WIDTH 540
+#define WINDOW_H_HEIGHT 360
 #define WINDOW_TITLE "Dodoi-Engine-C-Sdl2-Glad-OpenGL-4.1-HD"
 
 // Math constants
@@ -37,10 +37,10 @@
 #define MAT3 9
 #define MAT4 16
 #define PI 3.14159265358979323846f
-#define TWO_PI (2.0f * PI)
-#define HALF_PI (PI / 2.0f)
-#define DIV_PI_180 (PI / 180.0f)
-#define DIV_180_PI (180.0f / PI)
+#define TWO_PI 6.28318530717958647692f
+#define HALF_PI 1.57079632679489661923f
+#define DIV_PI_180 0.01745329251994329577f
+#define DIV_180_PI 57.2957795130823208768f
 
 // 3D constants
 #define FOV 60.0f
@@ -64,5 +64,5 @@
 #define SHADER_FOLDER_BINARY "./data/shaders/compiled/"
 
 // Game loop
-#define FPS 60
+#define FPS 144
 #define FRAME_TARGET_TIME (1000 / FPS)
