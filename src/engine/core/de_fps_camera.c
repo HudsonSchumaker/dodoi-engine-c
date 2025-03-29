@@ -26,6 +26,7 @@ fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
 	return camera;
 }
 
+#pragma intrinsic(cosf, sinf)
 void fps_camera_update(fps_camera_t* camera) {
     vec3_t look;
     look.x = cosf(camera->coords.pitch) * sinf(camera->coords.yaw);
