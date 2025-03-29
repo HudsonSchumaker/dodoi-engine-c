@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\3d\de_buffer.c" />
     <ClCompile Include="src\engine\3d\de_ebo.c" />
     <ClCompile Include="src\engine\3d\de_program.c" />
     <ClCompile Include="src\engine\3d\de_shader.c" />
@@ -157,6 +158,7 @@
     <ClCompile Include="src\engine\math\de_vec2.c" />
     <ClCompile Include="src\engine\math\de_vec3.c" />
     <ClCompile Include="src\engine\math\de_vec4.c" />
+    <ClCompile Include="src\engine\sfx\de_sfx.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\playground\splash_screen.c" />
     <ClCompile Include="src\playground\title_screen.c" />
@@ -165,7 +167,9 @@
     <ClInclude Include="src\include\de_buffer.h" />
     <ClInclude Include="src\include\de_camera.h" />
     <ClInclude Include="src\include\de_gfx.h" />
+    <ClInclude Include="src\include\de_model.h" />
     <ClInclude Include="src\include\de_scene.h" />
+    <ClInclude Include="src\include\de_sfx.h" />
     <ClInclude Include="src\include\glad\glad.h" />
     <ClInclude Include="src\include\KHR\khrplatform.h" />
     <ClInclude Include="src\include\de_matrix.h" />
@@ -213,6 +217,7 @@
     <Media Include="data\audios\ok.wav" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="data\icon.png" />
     <Image Include="data\images\10cop.png" />
     <Image Include="data\images\10esp.png" />
     <Image Include="data\images\10our.png" />

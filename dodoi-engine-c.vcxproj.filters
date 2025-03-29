@@ -69,7 +69,16 @@
     <ClCompile Include="src\engine\gfx\de_scene.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\playground\screen.c">
+    <ClCompile Include="src\playground\splash_screen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\playground\title_screen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\sfx\de_sfx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\3d\de_buffer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +119,16 @@
     <ClInclude Include="src\include\de_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\playground\screen.h">
+    <ClInclude Include="src\playground\splash_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\playground\title_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_sfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -389,6 +407,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="data\images\table17.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="data\icon.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
