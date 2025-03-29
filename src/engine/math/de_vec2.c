@@ -41,6 +41,7 @@ vec2_t vec2_div(const vec2_t* v, const float s) {
     return vec2_new(v->x / s, v->y / s);
 }
 
+#pragma intrinsic(cosf, sinf)
 vec2_t vec2_rotate(const vec2_t* v, const float angle) {
     return vec2_new(v->x * cosf(angle) - v->y * sinf(angle), v->x * sinf(angle) + v->y * cosf(angle));
 }
@@ -80,6 +81,7 @@ float vec2_cross(const vec2_t* a, const vec2_t* b) {
     return (a->x * b->y) - (a->y * b->x);
 }
 
+#pragma intrinsic(sqrtf)
 float vec2_magnitude(const vec2_t* v) {
     return sqrtf(v->x * v->x + v->y * v->y);
 }

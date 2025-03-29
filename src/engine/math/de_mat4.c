@@ -46,6 +46,7 @@ mat4_t mat4_make_translation(const float tx, const float ty, const float tz) {
     return m;
 }
 
+#pragma intrinsic(cosf, sinf)
 mat4_t mat4_make_rotation_x(const float rx) {
     float c = cosf(rx);
     float s = sinf(rx);
@@ -61,6 +62,7 @@ mat4_t mat4_make_rotation_x(const float rx) {
     return m;
 }
 
+#pragma intrinsic(cosf, sinf)
 mat4_t mat4_make_rotation_y(const float ry) {
     float c = cosf(ry);
     float s = sinf(ry);
@@ -76,6 +78,7 @@ mat4_t mat4_make_rotation_y(const float ry) {
     return m;
 }
 
+#pragma intrinsic(cosf, sinf)
 mat4_t mat4_make_rotation_z(const float rz) {
     float c = cosf(rz);
     float s = sinf(rz);
@@ -152,6 +155,7 @@ mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b) {
     return result;
 }
 
+#pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
     // | (h/w)*1/tan(fov/2)             0              0                 0 |
     // |                  0  1/tan(fov/2)              0                 0 |

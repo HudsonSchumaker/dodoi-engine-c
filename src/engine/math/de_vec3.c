@@ -61,6 +61,7 @@ vec3_t vec3_div(const vec3_t* v, const float s) {
     return vec3_new(v->x / s, v->y / s, v->z / s);
 }
 
+#pragma intrinsic(cosf, sinf)
 vec3_t vec3_rotate_x(const vec3_t* v, const float rx) {
     float cos_angle = cosf(rx);
     float sin_angle = sinf(rx);
@@ -73,6 +74,7 @@ vec3_t vec3_rotate_x(const vec3_t* v, const float rx) {
     return rotated_vector;
 }
 
+#pragma intrinsic(cosf, sinf)
 vec3_t vec3_rotate_y(const vec3_t* v, const float ry) {
     float cos_angle = cosf(ry);
     float sin_angle = sinf(ry);
@@ -85,6 +87,7 @@ vec3_t vec3_rotate_y(const vec3_t* v, const float ry) {
     return rotated_vector;
 }
 
+#pragma intrinsic(cosf, sinf)
 vec3_t vec3_rotate_z(const vec3_t* v, const float rz) {
     float cos_angle = cosf(rz);
     float sin_angle = sinf(rz);
@@ -148,6 +151,7 @@ void vec3_scale(vec3_t* v, float s) {
     v->z *= s;
 }
 
+#pragma intrinsic(sqrtf)
 float vec3_magnitude(const vec3_t* v) {
     return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
 }
