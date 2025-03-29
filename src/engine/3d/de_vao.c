@@ -26,36 +26,22 @@ void vao_bind(vao_t* vao) {
 	glBindVertexArray(vao->id);
 }
 
-void vao_link_vbo_2f(vao_t* vao, vbo_t* vbo, const GLuint layout) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_2f(const GLuint layout) {
 	glVertexAttribPointer(layout, 2, GL_FLOAT, GL_FALSE, STRIDE_2f, (void*)0);
 	glEnableVertexAttribArray(layout);
-	vbo_unbind();
-	vao_unbind();
 }
 
-void vao_link_vbo_3f(vao_t* vao, vbo_t* vbo, const GLuint layout) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f(const GLuint layout) {
 	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, STRIDE_3f, (void*)0);
 	glEnableVertexAttribArray(layout);
-	vbo_unbind();
-	vao_unbind();
 }
 
-void vao_link_vbo_4f(vao_t* vao, vbo_t* vbo, const GLuint layout) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_4f(const GLuint layout) {
 	glVertexAttribPointer(layout, 4, GL_FLOAT, GL_FALSE, STRIDE_4f, (void*)0);
 	glEnableVertexAttribArray(layout);
-	vbo_unbind();
-	vao_unbind();
 }
 
-void vao_link_vbo_3f2f(vao_t* vao, vbo_t* vbo) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f2f() {
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_2f, (void*)0);
 	glEnableVertexAttribArray(0);
@@ -63,13 +49,9 @@ void vao_link_vbo_3f2f(vao_t* vao, vbo_t* vbo) {
 	// Texture attribute
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, STRIDE_3f_2f, (void*)(STRIDE_3f));
 	glEnableVertexAttribArray(1);
-	vbo_unbind();
-	vao_unbind();
 }
 
-void vao_link_vbo_3f3f(vao_t* vao, vbo_t* vbo) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f3f() {
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f, (void*)0);
 	glEnableVertexAttribArray(0);
@@ -77,13 +59,9 @@ void vao_link_vbo_3f3f(vao_t* vao, vbo_t* vbo) {
 	// Normal attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f, (void*)(STRIDE_3f));
 	glEnableVertexAttribArray(1);
-	vbo_unbind();
-	vao_unbind();
 }
 
-void vao_link_vbo_3f2f3f(vao_t* vao, vbo_t* vbo) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f2f3f() {
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_2f, (void*)0);
 	glEnableVertexAttribArray(0);
@@ -95,12 +73,8 @@ void vao_link_vbo_3f2f3f(vao_t* vao, vbo_t* vbo) {
 	// Normal attribute
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_2f, (void*)(STRIDE_5f));
 	glEnableVertexAttribArray(2);
-	vbo_unbind();
-	vao_unbind();
 }
-void vao_link_vbo_3f3f2f(vao_t* vao, vbo_t* vbo) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f3f2f() {
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_2f, (void*)0);
 	glEnableVertexAttribArray(0);
@@ -112,12 +86,8 @@ void vao_link_vbo_3f3f2f(vao_t* vao, vbo_t* vbo) {
 	// Texture attribute
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_2f, (void*)(STRIDE_6f));
 	glEnableVertexAttribArray(2);
-	vbo_unbind();
-	vao_unbind();
 }
-void vao_link_vbo_3f3f3f(vao_t* vao, vbo_t* vbo) {
-	vao_bind(vao);
-	vbo_bind(vbo);
+void vao_link_vbo_3f3f3f() {
 	// Position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_3f, (void*)0);
 	glEnableVertexAttribArray(0);
@@ -129,12 +99,6 @@ void vao_link_vbo_3f3f3f(vao_t* vao, vbo_t* vbo) {
 	// Texture attribute
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, STRIDE_3f_3f_3f, (void*)(STRIDE_6f));
 	glEnableVertexAttribArray(2);
-	vbo_unbind();
-	vao_unbind();
-}
-
-void vao_link_ebo(vao_t* vao, ebo_t* ebo) {
-	// TODO
 }
 
 void vao_unbind(void) {

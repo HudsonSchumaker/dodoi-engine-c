@@ -17,11 +17,13 @@ ebo_t* ebo_new(void) {
 	return ebo;
 }
 
-void ebo_init(ebo_t* ebo, GLuint* indices, GLsizeiptr size) {
+void ebo_init(ebo_t* ebo) {
 	glGenBuffers(1, &ebo->id);
+}
+
+void ebo_set_data(ebo_t* ebo, GLuint* indices, GLsizeiptr size) {
 	ebo_bind(ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
-	ebo_unbind();
 }
 
 void ebo_bind(ebo_t* ebo) {

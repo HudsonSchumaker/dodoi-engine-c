@@ -17,11 +17,13 @@ vbo_t* vbo_new(void) {
 	return vbo;
 }
 
-void vbo_init(vbo_t* vbo, GLfloat* vertices, GLsizeiptr size) {
+void vbo_init(vbo_t* vbo) {
 	glGenBuffers(1, &vbo->id);
+}
+
+void vbo_set_data(vbo_t* vbo, GLfloat* vertices, GLsizeiptr size) {
 	vbo_bind(vbo);
 	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
-	vbo_unbind();
 }
 
 void vbo_bind(vbo_t* vbo) {
