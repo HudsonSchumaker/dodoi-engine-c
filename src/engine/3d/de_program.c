@@ -211,5 +211,5 @@ void program_set_uniform_mat3f(GLint location, const mat3_t* matrix) {
 void program_set_uniform_mat4f(GLint location, const mat4_t* matrix) {
 	float mat4_array[MAT4];
 	mat4_to_array(matrix, mat4_array);
-	glUniformMatrix3fv(location, 1, GL_FALSE, mat4_array);
+	glUniformMatrix4fv(location, 1, GL_FALSE, mat4_array);
 }
