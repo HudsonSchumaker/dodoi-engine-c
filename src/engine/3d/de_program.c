@@ -134,24 +134,14 @@ bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragmen
 	GLint result;
 	glGetProgramiv(program->id, GL_LINK_STATUS, &result);
 	if (result != GL_TRUE) {
-		GLint length;
-		glGetProgramiv(program->id, GL_INFO_LOG_LENGTH, &length);
+		GLint info_log_length;
+		glGetShaderiv(program->id, GL_INFO_LOG_LENGTH, &info_log_length);
 
-		if (length > 0) {
-			GLchar* info_log = (GLchar*)malloc(length);
-			if (info_log != NULL) {
-				glGetProgramInfoLog(program->id, length, NULL, info_log);
-				fprintf(stderr, "error when linking program: %s.\n", info_log);
-				free(info_log);
-			}
-			else {
-				fprintf(stderr, "failed to allocate memory for program info log.\n");
-			}
-			free(info_log);
-		}
-		else {
-			fprintf(stderr, "failed to link program: (no log available).\n");
-		}
+		GLchar* info_log = malloc(info_log_length);
+		glGetShaderInfoLog(program->id, info_log_length, NULL, info_log);
+
+		fprintf(stderr, "failed to compile shader: %s.\n", info_log);
+		free(info_log);
 		return false;
 	}
 	return true;
