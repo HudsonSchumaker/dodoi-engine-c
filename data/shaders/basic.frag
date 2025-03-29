@@ -1,15 +1,12 @@
-#version 410 core
+#version 410
 
-out vec4 FragColor;
-in vec2 TexCoord;
-	
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-	
+//in vec3 color;
+in vec2 textCoords;
+
+uniform sampler2D myTexture;
+
+out vec4 fragColor;
+
 void main() {
-	if (gl_FrontFacing) {
-		FragColor = texture(texture1, TexCoord);
-	} else {
-		FragColor = texture(texture2, TexCoord);
-	}
+    fragColor = texture(myTexture, textCoords);
 }
