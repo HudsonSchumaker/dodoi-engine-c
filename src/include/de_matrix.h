@@ -27,11 +27,12 @@ void mat3_to_array(const mat3_t* mat, float* array);
 // Mat4 functions
 mat4_t mat4_identity(void);
 mat4_t mat4_make_scale(const float sx, const float sy, const float sz);
-mat4_t mat4_make_translation(const float tx, const float ty, const float tz);
 
 mat4_t mat4_make_rotation_x(const float rx);
 mat4_t mat4_make_rotation_y(const float ry);
 mat4_t mat4_make_rotation_z(const float rz);
+
+mat4_t mat4_make_translation(const float tx, const float ty, const float tz);
 
 vec4_t mat4_mul_vec4(const mat4_t* m, const vec4_t* v);
 vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v);

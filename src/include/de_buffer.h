@@ -29,7 +29,13 @@ typedef struct {
     int channels;
 } tbo_t;
 
+// Buffer
 void buffer_init(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
+void buffer_bind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
+void buffer_unbind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
+void buffer_delete(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
+char* buffer_create_shader_path(const char* shader);
+char* buffer_create_texture_path(const char* texture);
 
 // Vertex Array Object (VAO)
 vao_t* vao_new(void);
@@ -37,6 +43,7 @@ void vao_init(vao_t* vao);
 void vao_bind(vao_t* vao);
 void vao_unbind(void);
 
+void vao_link_vbo_1f(const GLuint layout);
 void vao_link_vbo_2f(const GLuint layout);
 void vao_link_vbo_3f(const GLuint layout);
 void vao_link_vbo_4f(const GLuint layout);
