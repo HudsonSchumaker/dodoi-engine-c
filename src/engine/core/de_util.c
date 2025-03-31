@@ -57,3 +57,25 @@ double clamp(register double value, register double min_val, register double max
 double interpolate(register double start, register double end, register double t) {
     return start + t * (end - start);
 }
+
+#pragma intrinsic(sqrtf)
+float distance_between_points(const float x1, const float y1, const float x2, const float y2) {
+    // using the euclidean distance formula
+    return sqrtf((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+
+char* concat(const char* s1, const char* s2) {
+    const size_t len1 = strlen(s1);
+    const size_t len2 = strlen(s2);
+    char* result = malloc(len1 + len2 + 1); // +1 for the null-terminator
+	
+    if (!result) {
+		fprintf(stderr, "failed to allocate memory for concat.\n");
+		exit(EXIT_FAILURE);
+	}
+
+    memcpy(result, s1, len1);
+    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
+    return result;
+}
