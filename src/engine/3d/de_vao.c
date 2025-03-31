@@ -26,6 +26,11 @@ void vao_bind(vao_t* vao) {
 	glBindVertexArray(vao->id);
 }
 
+void vao_link_vbo_1f(const GLuint layout) {
+	glVertexAttribPointer(layout, 1, GL_FLOAT, GL_FALSE, STRIDE_1f, (void*)0);
+	glEnableVertexAttribArray(layout);
+}
+
 void vao_link_vbo_2f(const GLuint layout) {
 	glVertexAttribPointer(layout, 2, GL_FLOAT, GL_FALSE, STRIDE_2f, (void*)0);
 	glEnableVertexAttribArray(layout);
