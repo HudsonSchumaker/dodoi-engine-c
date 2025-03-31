@@ -7,11 +7,13 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_gfx.h"
+#include "../../include/de_model.h"
 
 static SDL_Window* window = NULL;
 static SDL_GLContext* context = NULL;
 static int GFX_WINDOW_WIDTH = 0;
 static int GFX_WINDOW_HEIGHT = 0;
+static color_t color;
 
 void gfx_init(bool fullscreen, bool vsync) {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -19,7 +21,10 @@ void gfx_init(bool fullscreen, bool vsync) {
         exit(EXIT_FAILURE);
     }
 
-    // Request at least 32-bit color
+	// Set clear color
+	color.r = 0.0f; color.g = 0.0f; color.b = 0.0f; color.a = 1.0f;
+
+    // Request at 32-bit color
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -82,6 +87,7 @@ void gfx_init(bool fullscreen, bool vsync) {
     // Enable v-sync (set 1 to enable, 0 to disable)
     SDL_GL_SetSwapInterval(vsync ? 1 : 0);
     glEnable(GL_DEPTH_TEST);
+    glViewport(0, 0, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
 }
 
 SDL_Window* gfx_get_window(void) {
@@ -92,6 +98,56 @@ SDL_GLContext* gfx_get_context(void) {
     return context;
 }
 
+float gfx_get_aspect_ratio(void) {
+    return (float)GFX_WINDOW_WIDTH / GFX_WINDOW_HEIGHT;
+}
+
+ipair_t gfx_get_window_size(void) {
+	ipair_t window_size = { GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT };
+    return window_size;
+}
+
+void gfx_show_mouse_cursor(bool value) {
+	SDL_ShowCursor(value ? SDL_ENABLE : SDL_DISABLE);
+}
+
+void gfx_set_mouse_position(const int x, const int y) {
+	SDL_WarpMouseInWindow(window, x, y);
+}
+
+void gfx_set_clear_color(const float r, const float g, const float b, const float a) {
+    color.r = r;
+    color.g = g;
+    color.b = b;
+    color.a = a;
+}
+
+void gfx_clear_screen(void) {
+	glClearColor(color.r, color.g, color.b, color.a);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void gfx_swap_screen(void) {
+	SDL_GL_SwapWindow(window);
+}
+
+void gfx_set_2d_mode(void) {
+	glDisable(GL_DEPTH_TEST);
+}
+
+void gfx_set_3d_mode(void) {
+	glEnable(GL_DEPTH_TEST);
+}
+
+SDL_Surface* gfx_load_texture(const char* path) {
+    SDL_Surface* surface = IMG_Load(path);
+    if (surface == NULL) {
+        fprintf(stderr, "failed to load texture: %s.\n", path);
+        return NULL;
+    }
+    return surface;
+}
+
 void gfx_on_window_resized(SDL_Window* window, const int new_width, const int new_height) {
     printf("Window resized to %dx%d\n", new_width, new_height);
     // Perform any updates needed for your application, e.g., adjust viewport.
@@ -99,8 +155,7 @@ void gfx_on_window_resized(SDL_Window* window, const int new_width, const int ne
     GFX_WINDOW_HEIGHT = new_height;
 
     SDL_SetWindowSize(window, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
-    // seems to be not needed
-    //glViewport(0, 0, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
+    glViewport(0, 0, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
 }
 
 void gfx_close(void) {
