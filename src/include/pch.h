@@ -44,6 +44,7 @@
 
 // 3D constants
 #define FOV 60.0f
+#define STRIDE_1f 1 * sizeof(GLfloat)
 #define STRIDE_2f 2 * sizeof(GLfloat)
 #define STRIDE_3f 3 * sizeof(GLfloat)
 #define STRIDE_4f 4 * sizeof(GLfloat)
@@ -53,6 +54,18 @@
 #define STRIDE_3f_3f 6 * sizeof(GLfloat)
 #define STRIDE_3f_3f_2f 8 * sizeof(GLfloat)
 #define STRIDE_3f_3f_3f 9 * sizeof(GLfloat)
+
+#define EYE "eye"
+#define VIEW "view"
+#define MODEL "model"
+#define PROJECTION "projection"
+#define POSITION "aPosition"
+#define NORMAL "aNormal"
+#define TEX_COORD "aTexCoord"
+
+// Texture
+#define TEXTURE "texture0"
+#define TEXTURE1 "texture1"
 
 // Dodoi-Engine folders
 #define MAP_FOLDER "./data/maps/"
