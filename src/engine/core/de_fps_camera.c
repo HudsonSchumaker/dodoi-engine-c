@@ -26,6 +26,16 @@ fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
 	return camera;
 }
 
+void fps_camera_init(fps_camera_t* camera, vec3_t position, vec3_t target) {
+	camera->coords.eye = position;
+	camera->coords.target = target;
+	camera->coords.up = vec3_up();
+	camera->coords.yaw = 0.0f;
+	camera->coords.pitch = 0.0f;
+	camera->look = vec3_new(0.0f, 0.0f, -1.0f);
+	camera->right = vec3_new(1.0f, 0.0f, 0.0f);
+}
+
 #pragma intrinsic(cosf, sinf)
 void fps_camera_update(fps_camera_t* camera) {
     vec3_t look;

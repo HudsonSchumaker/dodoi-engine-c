@@ -39,6 +39,7 @@ void orbit_camera_set_position(orbit_camera_t* camera, vec3_t position); // eye
 void orbit_camera_set_rotation(orbit_camera_t* camera, float yaw, float pitch);
 
 fps_camera_t* fps_camera_new(vec3_t position, vec3_t target);
+void fps_camera_init(fps_camera_t* camera, vec3_t position, vec3_t target);
 void fps_camera_update(fps_camera_t* camera);
 void fps_camera_move(fps_camera_t* camera, vec3_t direction);
 void fps_camera_set_position(fps_camera_t* camera, vec3_t direction);
