@@ -114,9 +114,9 @@ vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v) {
 
     __m128 res = _mm_add_ps(
         _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x00), col1),
-            _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x55), col2)),
+        _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x55), col2)),
         _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xAA), col3),
-            _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xFF), col4))
+        _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xFF), col4))
     );
 
     _mm_store_ps(&result.x, res);
@@ -157,7 +157,7 @@ mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b) {
 
 #pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
-    // | (h/w)*1/tan(fov/2)             0              0                 0 |
+    // | (w/h)/1/tan(fov/2)             0              0                 0 |
     // |                  0  1/tan(fov/2)              0                 0 |
     // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
     // |                  0             0              1                 0 |
