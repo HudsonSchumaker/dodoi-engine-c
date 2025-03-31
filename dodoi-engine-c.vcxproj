@@ -141,8 +141,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\3d\de_buffer.c" />
+    <ClCompile Include="src\engine\3d\de_cube.c" />
     <ClCompile Include="src\engine\3d\de_ebo.c" />
+    <ClCompile Include="src\engine\3d\de_game_object.c" />
     <ClCompile Include="src\engine\3d\de_program.c" />
+    <ClCompile Include="src\engine\3d\de_quad.c" />
     <ClCompile Include="src\engine\3d\de_shader.c" />
     <ClCompile Include="src\engine\3d\de_tbo.c" />
     <ClCompile Include="src\engine\3d\de_vao.c" />
@@ -166,8 +169,11 @@
   <ItemGroup>
     <ClInclude Include="src\include\de_buffer.h" />
     <ClInclude Include="src\include\de_camera.h" />
+    <ClInclude Include="src\include\de_cube.h" />
+    <ClInclude Include="src\include\de_game_object.h" />
     <ClInclude Include="src\include\de_gfx.h" />
     <ClInclude Include="src\include\de_model.h" />
+    <ClInclude Include="src\include\de_quad.h" />
     <ClInclude Include="src\include\de_scene.h" />
     <ClInclude Include="src\include\de_sfx.h" />
     <ClInclude Include="src\include\glad\glad.h" />
@@ -197,6 +203,8 @@
     <None Include="data\shaders\blinn-phong.vert" />
     <None Include="data\shaders\card-directional-light.frag" />
     <None Include="data\shaders\compiled\.gitkeep" />
+    <None Include="data\shaders\cube.frag" />
+    <None Include="data\shaders\cube.vert" />
     <None Include="data\shaders\directional-light.frag" />
     <None Include="data\shaders\directional-light.vert" />
     <None Include="data\shaders\fresnel.frag" />

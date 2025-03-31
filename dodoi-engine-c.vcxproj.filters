@@ -81,6 +81,15 @@
     <ClCompile Include="src\engine\3d\de_buffer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\3d\de_game_object.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\3d\de_quad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\3d\de_cube.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\pch.h">
@@ -131,6 +140,15 @@
     <ClInclude Include="src\include\de_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\de_game_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -158,6 +176,8 @@
     <None Include="data\storage\.gitkeep" />
     <None Include="data\audios\cardPlace4.ogg" />
     <None Include="data\audios\cardShove2.ogg" />
+    <None Include="data\shaders\cube.frag" />
+    <None Include="data\shaders\cube.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE.txt" />
