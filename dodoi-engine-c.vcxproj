@@ -150,6 +150,7 @@
     <ClCompile Include="src\engine\3d\de_tbo.c" />
     <ClCompile Include="src\engine\3d\de_vao.c" />
     <ClCompile Include="src\engine\3d\de_vbo.c" />
+    <ClCompile Include="src\engine\core\de_camera.c" />
     <ClCompile Include="src\engine\core\de_fps_camera.c" />
     <ClCompile Include="src\engine\core\de_orbit_camera.c" />
     <ClCompile Include="src\engine\core\de_util.c" />
@@ -158,6 +159,7 @@
     <ClCompile Include="src\engine\gfx\glad.c" />
     <ClCompile Include="src\engine\math\de_mat3.c" />
     <ClCompile Include="src\engine\math\de_mat4.c" />
+    <ClCompile Include="src\engine\math\de_math.c" />
     <ClCompile Include="src\engine\math\de_vec2.c" />
     <ClCompile Include="src\engine\math\de_vec3.c" />
     <ClCompile Include="src\engine\math\de_vec4.c" />
@@ -172,6 +174,7 @@
     <ClInclude Include="src\include\de_cube.h" />
     <ClInclude Include="src\include\de_game_object.h" />
     <ClInclude Include="src\include\de_gfx.h" />
+    <ClInclude Include="src\include\de_math.h" />
     <ClInclude Include="src\include\de_model.h" />
     <ClInclude Include="src\include\de_quad.h" />
     <ClInclude Include="src\include\de_scene.h" />
