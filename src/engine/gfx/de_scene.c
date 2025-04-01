@@ -15,7 +15,7 @@ short scene_manager_set_scene(scene_t* scene) {
     short status = 0;
     if (current_scene && current_scene->unload) {
         current_scene->unload();       // unload the current scene
-        free(current_scene);
+        //free(current_scene);
     }
 
     current_scene = scene;
@@ -25,7 +25,6 @@ short scene_manager_set_scene(scene_t* scene) {
     if (current_scene && current_scene->run) {
         status = current_scene->run(); // run the scene loop
     }
-
     return status;
 }
 
