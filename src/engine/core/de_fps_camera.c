@@ -6,7 +6,7 @@
 * Dodoi-Engine is a game engine developed by Dodoi-Lab.
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
-#include "../../include/de_util.h"
+#include "../../include/de_math.h"
 #include "../../include/de_camera.h"
 
 fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
@@ -22,18 +22,20 @@ fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
 	camera->coords.pitch = 0.0f;
 
 	camera->look  = vec3_new(0.0f, 0.0f, -1.0f);
-	camera->right = vec3_new(1.0f, 0.0f, 0.0f);
+	camera->right = vec3_right();
 	return camera;
 }
 
 void fps_camera_init(fps_camera_t* camera, vec3_t position, vec3_t target) {
-	camera->coords.eye = position;
+	camera->coords.eye    = position;
 	camera->coords.target = target;
-	camera->coords.up = vec3_up();
-	camera->coords.yaw = 0.0f;
+	camera->coords.up     = vec3_up();
+	
+	camera->coords.yaw   = 0.0f;
 	camera->coords.pitch = 0.0f;
-	camera->look = vec3_new(0.0f, 0.0f, -1.0f);
-	camera->right = vec3_new(1.0f, 0.0f, 0.0f);
+
+	camera->look  = vec3_new(0.0f, 0.0f, -1.0f);
+	camera->right = vec3_right();
 }
 
 #pragma intrinsic(cosf, sinf)
@@ -44,9 +46,8 @@ void fps_camera_update(fps_camera_t* camera) {
     look.z = cosf(camera->coords.pitch) * cosf(camera->coords.yaw);
 
     vec3_normalize(&look);
-    vec3_t up = vec3_new(0.0f, 1.0f, 0.0f);
 
-    vec3_t crossRight = vec3_cross(&look, &up);
+    vec3_t crossRight = vec3_cross(&look, &camera->coords.up);
     vec3_normalize(&crossRight);
     camera->right = crossRight;
 
@@ -60,7 +61,6 @@ void fps_camera_update(fps_camera_t* camera) {
 
 void fps_camera_move(fps_camera_t* camera, vec3_t direction) {
 	camera->coords.eye = vec3_add(&camera->coords.eye, &direction);
-	fps_camera_update(camera);
 }
 
 void fps_camera_set_position(fps_camera_t* camera, vec3_t position) {
@@ -68,9 +68,9 @@ void fps_camera_set_position(fps_camera_t* camera, vec3_t position) {
 }
 
 void fps_camera_set_rotation(fps_camera_t* camera, float yaw, float pitch) {
-	camera->coords.yaw   += deg_to_rad(yaw);
-	camera->coords.pitch += deg_to_rad(pitch);
-	camera->coords.pitch = clampf(deg_to_rad(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
+	camera->coords.yaw   += deg_to_radf(yaw);
+	camera->coords.pitch += deg_to_radf(pitch);
+	camera->coords.pitch =  clampf(deg_to_radf(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
 
 	if (camera->coords.yaw >  TWO_PI) {
 		camera->coords.yaw -= TWO_PI;
@@ -78,8 +78,6 @@ void fps_camera_set_rotation(fps_camera_t* camera, float yaw, float pitch) {
 	else if (camera->coords.yaw < 0.0f) {
 		camera->coords.yaw += TWO_PI;
 	}
-
-	fps_camera_update(camera);
 }
 
 vec3_t* fps_camera_get_look(fps_camera_t* camera) {

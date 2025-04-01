@@ -12,8 +12,8 @@
 #include "de_matrix.h"
 
 typedef struct {
-    vec3_t eye;
-    vec3_t target;
+	vec3_t eye;    // position
+	vec3_t target; // lookAt
     vec3_t up;
 
     float yaw;
@@ -30,6 +30,9 @@ typedef struct {
     vec3_t look;
     vec3_t right;
 } fps_camera_t;
+
+mat4_t camera_perspective(const float near, const float far);
+mat4_t camera_look_at(camera_t* camera);
 
 orbit_camera_t* orbit_camera_new(void);
 void orbit_camera_update(orbit_camera_t* camera);

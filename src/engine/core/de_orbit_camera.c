@@ -6,7 +6,7 @@
 * Dodoi-Engine is a game engine developed by Dodoi-Lab.
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
-#include "../../include/de_util.h"
+#include "../../include/de_math.h"
 #include "../../include/de_camera.h"
 
 orbit_camera_t* orbit_camera_new(void) {
@@ -44,8 +44,8 @@ void orbit_camera_set_position(orbit_camera_t* camera, vec3_t position) {
 }
 
 void orbit_camera_set_rotation(orbit_camera_t* camera, float yaw, float pitch) {
-	camera->coords.yaw   = deg_to_rad(yaw);
-	camera->coords.pitch = clampf(deg_to_rad(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
+	camera->coords.yaw   = deg_to_radf(yaw);
+	camera->coords.pitch = clampf(deg_to_radf(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
 
 	orbit_camera_update(camera);
 }

@@ -6,8 +6,9 @@
 * Dodoi-Engine is a game engine developed by Dodoi-Lab.
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
-#include "../../include/de_game_object.h"
 #include "../../include/de_util.h"
+#include "../../include/de_math.h"
+#include "../../include/de_game_object.h"
 
 void game_object_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture) {
 	go->model = mat4_identity();
@@ -58,9 +59,9 @@ void game_object_scale(game_object_t* go, const vec3_t* scale) {
 }
 
 void game_object_rotate(game_object_t* go, const vec3_t* rotation) {
-	mat4_t rotation_matrix_x = mat4_make_rotation_x(deg_to_rad(rotation->x));
-	mat4_t rotation_matrix_y = mat4_make_rotation_y(deg_to_rad(rotation->y));
-	mat4_t rotation_matrix_z = mat4_make_rotation_z(deg_to_rad(rotation->z));
+	mat4_t rotation_matrix_x = mat4_make_rotation_x(deg_to_radf(rotation->x));
+	mat4_t rotation_matrix_y = mat4_make_rotation_y(deg_to_radf(rotation->y));
+	mat4_t rotation_matrix_z = mat4_make_rotation_z(deg_to_radf(rotation->z));
 
 	go->model = mat4_mul_mat4_sse(&rotation_matrix_z, &go->model);
 	go->model = mat4_mul_mat4_sse(&rotation_matrix_y, &go->model);
