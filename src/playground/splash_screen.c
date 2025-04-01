@@ -7,83 +7,51 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "splash_screen.h"
+
 #include "../include/de_gfx.h"
+#include "../include/de_cube.h"
 #include "../include/de_util.h"
-#include "../include/de_buffer.h"
 #include "../include/de_camera.h"
-#include "../include/de_matrix.h"
-#include "../include/de_vector.h"
-#include "../include/de_program.h"
 
 static bool running = false;
+static fps_camera_t* camera = NULL;
 static scene_t* splash_screen = NULL;
 
-static vao_t vao;
-static vbo_t vbo;
-static tbo_t tbo;
-static program_t program;
+static mat4_t projection;
+static mat4_t view;
 
-static vec3_t position;
-static vec3_t target;
-static fps_camera_t* camera;
+static cube_t cube;
+static cube_t cube2;
+static cube_t cube3;
+static cube_t _floor;
 
-static float angle = 45.0f;
+static vec3_t target = { 0.0f, 0.0f, 0.0f };
+static vec3_t position = { 0.0f, 1.0f, -5.0f };
 
-GLfloat TEX_COORDS[] = {
-	0.0f, 0.0f,
-	0.0f, 1.0f,
-	1.0f, 1.0f,
-	1.0f, 0.0f
-};
+static vec3_t cube_pos = { -10.0f, 2.0f, 10.0f };
+static vec3_t cube_pos2 = { 0.0f, 2.0f, 10.0f };
+static vec3_t cube_pos3 = { 10.0f, 2.0f, 10.0f };
+static vec3_t floor_pos = { 0.0f, .0f, 0.0f };
+float angle = 45.0f;
 
-GLfloat VERTEX[] = {
-	-1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
-	1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
-	1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
-	-1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
-	-1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
-	1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
-
-	// back face
-	-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-	1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
-	-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-	 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-
-	 // left face
-	 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	 -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
-	 -1.0f,  1.0f,  1.0f, 1.0f, 1.0f,
-	 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	 -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-	 -1.0f, -1.0f,  1.0f, 1.0f, 0.0f,
-
-	 // right face
-	 1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
-	 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-	 1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
-	 1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
-	 1.0f, -1.0f,  1.0f, 0.0f, 0.0f,
-	 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-
-	 // top face
-	 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
-	 1.0f,  1.0f, -1.0f, 1.0f, 1.0f,
-	 -1.0f,  1.0f, -1.0f, 0.0f, 1.0f,
-	 -1.0f,  1.0f,  1.0f, 0.0f, 0.0f,
-	 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,
-
-	 // bottom face
-	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
-	 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-	 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,
-	 -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
-	 -1.0f, -1.0f, -1.0f, 0.0f, 0.0f,
-	 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,
-};
+void check_gl_error(const char* function) {
+    GLenum error = glGetError();
+    while (error != GL_NO_ERROR) {
+        const char* errorString;
+        switch (error) {
+        case GL_INVALID_ENUM:      errorString = "GL_INVALID_ENUM"; break;
+        case GL_INVALID_VALUE:     errorString = "GL_INVALID_VALUE"; break;
+        case GL_INVALID_OPERATION: errorString = "GL_INVALID_OPERATION"; break;
+        case GL_STACK_OVERFLOW:    errorString = "GL_STACK_OVERFLOW"; break;
+        case GL_STACK_UNDERFLOW:   errorString = "GL_STACK_UNDERFLOW"; break;
+        case GL_OUT_OF_MEMORY:     errorString = "GL_OUT_OF_MEMORY"; break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION: errorString = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+        default:                   errorString = "Unknown Error"; break;
+        }
+        fprintf(stderr, "OpenGL error in %s: %s\n", function, errorString);
+        error = glGetError();
+    }
+}
 
 void splash_screen_init(void) {
     splash_screen = (scene_t*)malloc(sizeof(scene_t));
@@ -103,87 +71,145 @@ void splash_screen_init(void) {
 }
 
 void splash_screen_load(void) {
-	if (!program_compile(&program, SHADER_FOLDER"basic.vert", SHADER_FOLDER"basic.frag")) {
-		fprintf(stderr, "Failed to compile shaders.\n");
-		exit(EXIT_FAILURE);
-	}
-
-	tbo_init(&tbo, IMAGE_FOLDER"cube.png");
-	if (!tbo_load(&tbo)) {
-		fprintf(stderr, "Failed to load texture.\n");
-		exit(EXIT_FAILURE);
-	}
+	cube_init(&cube, "cube.vert", "cube.frag", "icon.png");
+    cube_init(&cube2, "cube.vert", "cube.frag", "cube.png");
+    cube_init(&cube3, "cube.vert", "cube.frag", "crate.jpg");
+	cube_init(&_floor, "cube.vert", "cube.frag", "grid.jpg");
 	
-	vbo_init(&vbo, (GLfloat*)VERTEX, sizeof(VERTEX));
-	vao_link_vbo_3f2f(&vao, &vbo);
+    cube_set_position(&cube, &cube_pos);
+    cube_set_position(&cube2, &cube_pos2);
+    cube_set_position(&cube3, &cube_pos3);
+	cube_set_position(&_floor, &floor_pos);
 
-    position = vec3_new(0.0f, 1.0f, 10.0f);
-    target = vec3_new(0.0f, 0.0f, 0.0f);
+	vec3_t scale = vec3_new(20.0f, 0.1f, 20.0f);
+	cube_set_scale(&_floor, &scale);
 
     camera = fps_camera_new(position, target);
 
+	gfx_set_clear_color(0.0f, 0.2f, 0.0f, 1.0f);
     running = true;
     printf("Splash Screen: Load\n");
-    // Load logic here
 }
 
 void splash_screen_input(void) {
+    const float MOUSE_SENSITIVITY = 0.1f;
+    const float MOVE_SPEED = 8.0f;
+    static int lastMouseX;
+    static int lastMouseY;
+    static vec3_t direction;
+
     SDL_Event sdlEvent;
     while (SDL_PollEvent(&sdlEvent)) {
+        SDL_Keycode key = sdlEvent.key.keysym.sym;
+        
         switch (sdlEvent.type) {
         case SDL_QUIT:
             running = false;
             break;
-        }
-    }
+
+        case SDL_MOUSEMOTION:
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+
+            float deltaX = (float)lastMouseX - (float)mouseX;
+            float deltaY = (float)lastMouseY - (float)mouseY;
+
+            float yaw   = -deltaX / 4 + sdlEvent.motion.xrel * MOUSE_SENSITIVITY * scene_manager_get_delta_time();
+            float pitch = deltaY  / 4 + sdlEvent.motion.yrel * MOUSE_SENSITIVITY * scene_manager_get_delta_time();
+
+            fps_camera_set_rotation(camera, yaw, pitch);
+            lastMouseX = mouseX;
+            lastMouseY = mouseY;
+			break;
+
+		case SDL_KEYDOWN:
+            if (key == SDLK_w || key == SDLK_UP) {
+                direction.z = 1.0f;
+            }
+
+            if (key == SDLK_s || key == SDLK_DOWN) {
+                direction.z = -1.0f;              
+            }
+
+			if (key == SDLK_a || key == SDLK_LEFT) {
+				direction.x = -1.0f;
+			}
+
+			if (key == SDLK_d || key == SDLK_RIGHT) {
+				direction.x = 1.0f;
+			}
+			break;
+
+        case SDL_KEYUP:
+            key = sdlEvent.key.keysym.sym;
+
+            if (key == SDLK_w || key == SDLK_UP) {
+                direction.z = 0.0f;
+            }
+
+            if (key == SDLK_s || key == SDLK_DOWN) {
+                direction.z = 0.0f;
+            }
+
+            if (key == SDLK_a || key == SDLK_LEFT) {
+                direction.x = 0.0f;
+            }
+
+            if (key == SDLK_d || key == SDLK_RIGHT) {
+                direction.x = 0.0f;
+            }
+            break;
+        
+        case SDL_WINDOWEVENT:
+            if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
+                gfx_on_window_resized(gfx_get_window(), sdlEvent.window.data1, sdlEvent.window.data2);
+            }
+			break;
+		}
+	}
+
+	float speed = MOVE_SPEED * scene_manager_get_delta_time();
+    vec3_t scaled_direction = vec3_mul(&direction, speed);
+	fps_camera_move(camera, scaled_direction);
 }
 
 void splash_screen_update(void) {
+	fps_camera_update(camera);
+	
+	projection = mat4_identity();
+    float fov = deg_to_rad(FOV);
+	projection = mat4_perspective(fov, gfx_get_aspect_ratio(), 0.1f, 100.0f);
+	
+	view = mat4_identity();
+    view = mat4_look_at(&camera->coords.eye, &camera->coords.target, &camera->coords.up); 
 
+	vec3_t rotation = { 0.0f, 0.0f, angle };
+	cube_set_rotation(&cube, &rotation);
+    cube_update(&cube);
+
+    cube_set_rotation(&cube2, &rotation);
+    cube_update(&cube2);
+
+    cube_set_rotation(&cube3, &rotation);
+    cube_update(&cube3);
+
+	//cube_set_rotation(&_floor, &rotation);
+	cube_update(&_floor);
+
+    angle += deg_to_rad(5000.0f * scene_manager_get_delta_time());
+
+    //if (angle > 2 * PI) angle -= 2 * PI;
 }
 
 void splash_screen_render(void) {
-	glClearColor(0.0f, 0.555f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	gfx_clear_screen();
 
-	mat4_t world_matrix = mat4_identity();
-	mat4_t view = mat4_identity();
-	mat4_t projection = mat4_identity();
-
-	mat4_t translation_matrix = mat4_make_translation(position.x, position.y, position.z);
-	mat4_t rotation_matrix_x = mat4_make_rotation_x(angle);
-	mat4_t rotation_matrix_y = mat4_make_rotation_y(angle);
-	mat4_t rotation_matrix_z = mat4_make_rotation_z(angle);
-
-	world_matrix = mat4_mul_mat4_sse(&rotation_matrix_z, &world_matrix);
-	world_matrix = mat4_mul_mat4_sse(&rotation_matrix_y, &world_matrix);
-	world_matrix = mat4_mul_mat4_sse(&rotation_matrix_x, &world_matrix);
-	world_matrix = mat4_mul_mat4_sse(&translation_matrix, &world_matrix);
-
-	view = mat4_look_at(&camera->coords.eye, &camera->coords.target, &camera->coords.up);
-	const float fov = deg_to_rad(60.0f);
-	projection = mat4_perspective(fov, 800.0f / 600.0f, 0.1f, 100.0f);
+	cube_render(&cube, &view, &projection);
+    cube_render(&cube2, &view, &projection);
+    cube_render(&cube3, &view, &projection);
+	cube_render(&_floor, &view, &projection);
 	
-	GLint uniform_texture = program_get_uniform_location(&program, "myTexture");
-	GLint uniform_model = program_get_uniform_location(&program, "model");
-	GLint uniform_view = program_get_uniform_location(&program, "view");
-	GLint uniform_projection = program_get_uniform_location(&program, "projection");
-
-	program_set(&program);
-
-	vao_bind(&vao);
-	tbo_bind(&tbo);
-
-	program_set_uniform1i(uniform_texture, 0);
-	program_set_uniform_mat4f(uniform_model, &world_matrix);
-	program_set_uniform_mat4f(uniform_view, &view);
-	program_set_uniform_mat4f(uniform_projection, &projection);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-
-	vao_unbind();
-	program_unset();
-	SDL_GL_SwapWindow(gfx_get_window());
+	gfx_swap_screen();
 }
 
 short splash_screen_run(void) {
@@ -197,7 +223,9 @@ short splash_screen_run(void) {
 }
 
 void splash_screen_unload(void) {
-    program_destroy(&program);
+	cube_delete(&cube);
+    cube_delete(&cube2);
+    cube_delete(&cube3);
     printf("Splash Screen: Unload\n");
 }
 
