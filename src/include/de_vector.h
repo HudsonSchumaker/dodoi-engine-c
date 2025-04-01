@@ -65,8 +65,15 @@ float vec2_magnitude(const vec2_t* v);
 float vec2_magnitude_squared(const vec2_t* v);
 
 // Vec3 functions
-vec3_t vec3_up(void);
 vec3_t vec3_zero(void);
+vec3_t vec3_one(void);
+vec3_t vec3_up(void);
+vec3_t vec3_down(void);
+vec3_t vec3_left(void);
+vec3_t vec3_right(void);
+vec3_t vec3_forward(void);
+vec3_t vec3_backward(void);
+
 vec3_t vec3_new(const float x, const float y, const float z);
 vec3_t vec3_clone(const vec3_t* v);
 

@@ -7,13 +7,36 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_vector.h"
+vec3_t vec3_zero(void) {
+    return vec3_new(0.0f, 0.0f, 0.0f);
+}
+
+vec3_t vec3_one(void) {
+	return vec3_new(1.0f, 1.0f, 1.0f);
+}
 
 vec3_t vec3_up(void) {
     return vec3_new(0.0f, 1.0f, 0.0f);
 }
 
-vec3_t vec3_zero(void) {
-    return vec3_new(0.0f, 0.0f, 0.0f);
+vec3_t vec3_down(void) {
+	return vec3_new(0.0f, -1.0f, 0.0f);
+}
+
+vec3_t vec3_left(void) {
+	return vec3_new(-1.0f, 0.0f, 0.0f);
+}
+
+vec3_t vec3_right(void) {
+	return vec3_new(1.0f, 0.0f, 0.0f);
+}
+
+vec3_t vec3_forward(void) {
+	return vec3_new(0.0f, 0.0f, -1.0f);
+}
+
+vec3_t vec3_backward(void) {
+	return vec3_new(0.0f, 0.0f, 1.0f);
 }
 
 vec3_t vec3_new(const float x, const float y, const float z) {
