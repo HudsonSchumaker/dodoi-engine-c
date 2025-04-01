@@ -32,15 +32,15 @@ bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar
 	shader_init_frag_shader(fragment_shader);
 
 	if (!shader_compile(vertex_shader, vertex_path)) {
-		fprintf(stderr, "failed to compile vertex shader.\n");
+		fprintf(stderr, "failed to compile vertex shader: %s\n", vertex_path);
 		return false;
 	}
 	if (!shader_compile(fragment_shader, fragment_path)) {
-		fprintf(stderr, "failed to compile fragment shader.\n");
+		fprintf(stderr, "failed to compile fragment shader: %s\n", fragment_path);
 		return false;
 	}
 	if (!program_link(program, vertex_shader, fragment_shader)) {
-		fprintf(stderr, "failed to link program.\n");
+		fprintf(stderr, "failed to link program: %d\n", program->id);
 		return false;
 	}
 
