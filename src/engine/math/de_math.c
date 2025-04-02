@@ -32,6 +32,10 @@ float rad_to_degf(register float radians) {
     return radians * DIV_180_PI;
 }
 
+float normalize_anglef(register float angle) {
+	return wrapf(angle, 0.0f, 360.0f);
+}
+
 float smoothstepf(register float edge0, register float edge1, register float x) {
     x = clampf((x - edge0) / (edge1 - edge0), 0.0f, 1.0f);
     return x * x * (3 - 2 * x);
