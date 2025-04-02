@@ -96,6 +96,12 @@
     <ClCompile Include="src\engine\math\de_math.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\io\de_obj_loader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\3d\de_mesh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\pch.h">
@@ -158,12 +164,17 @@
     <ClInclude Include="src\include\de_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\include\de_mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_obj_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="README.md" />
-    <None Include="data\shaders\compiled\.gitkeep" />
     <None Include="data\images\.gitkeep" />
     <None Include="data\fonts\.gitkeep" />
     <None Include="data\audios\.gitkeep" />
@@ -187,6 +198,7 @@
     <None Include="data\audios\cardShove2.ogg" />
     <None Include="data\shaders\cube.frag" />
     <None Include="data\shaders\cube.vert" />
+    <None Include="data\binary\.gitkeep" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="LICENSE.txt" />
