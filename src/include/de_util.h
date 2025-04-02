@@ -10,4 +10,10 @@
 #include "pch.h"
 
 int sign(float value);
+
+char* create_model_path(const char* model);
+char* create_shader_path(const char* shader);
+char* create_texture_path(const char* texture);
+char* create_binary_path(const char* binary);
+
 char* concat(const char* s1, const char* s2);
