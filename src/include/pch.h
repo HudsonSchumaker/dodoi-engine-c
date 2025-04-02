@@ -74,7 +74,7 @@
 #define AUDIO_FOLDER "./data/audios/"
 #define IMAGE_FOLDER "./data/images/"
 #define SHADER_FOLDER "./data/shaders/"
-#define SHADER_FOLDER_BINARY "./data/shaders/compiled/"
+#define BINARY_FOLDER "./data/binary/"
 
 // Game loop
 #define FPS 144
