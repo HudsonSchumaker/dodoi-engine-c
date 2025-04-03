@@ -34,8 +34,6 @@ void buffer_init(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
 void buffer_bind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
 void buffer_unbind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
 void buffer_delete(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
-char* buffer_create_shader_path(const char* shader);
-char* buffer_create_texture_path(const char* texture);
 
 // Vertex Array Object (VAO)
 vao_t* vao_new(void);
