@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "pch.h"
+#include "de_vector.h"
 
 typedef struct {
     int first;
@@ -37,3 +38,19 @@ typedef struct {
 	float b;
 	float a;
 } color_t;
+
+typedef struct {
+    union {
+        struct {
+            float x;
+            float y;
+        };
+        float as_array[2];
+    };
+} text2_t;
+
+typedef struct {
+    vec3_t position;
+    vec2_t uv;
+    vec3_t normal;
+} vertex_t;
