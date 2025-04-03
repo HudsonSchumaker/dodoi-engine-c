@@ -32,11 +32,3 @@ void buffer_delete(vao_t* vao, vbo_t* vbo, ebo_t* ebo) {
 	vbo_delete(vbo);
 	ebo_delete(ebo);
 }
-
-char* buffer_create_shader_path(const char* shader) {
-	return concat(SHADER_FOLDER, shader);
-}
-
-char* buffer_create_texture_path(const char* texture) {
-	return concat(IMAGE_FOLDER, texture);
-}
