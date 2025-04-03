@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "pch.h"
+#include "de_mesh.h"
 #include "de_buffer.h"
 #include "de_vector.h"
 #include "de_matrix.h"
@@ -25,6 +26,7 @@ typedef struct {
     tbo_t tbo;
     
     program_t program;
+	mesh_t mesh;
 
     GLint uniform_model;
     GLint uniform_view;
@@ -33,6 +35,7 @@ typedef struct {
 } game_object_t;
 
 void game_object_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture);
+void game_object_3d_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture, const char* model);
 
 void game_object_update_model_matrix(game_object_t* go);
 void game_object_scale(game_object_t* go, const vec3_t* scale);

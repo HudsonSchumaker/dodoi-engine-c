@@ -18,7 +18,7 @@ void game_object_init(game_object_t* go, const char* vertex_shader, const char* 
 
 	buffer_init(&go->vao, &go->vbo, &go->ebo);
 
-	char* texture_path = buffer_create_texture_path(texture);
+	char* texture_path = create_texture_path(texture);
 	tbo_init(&go->tbo, texture_path);
 
 	if (!tbo_load(&go->tbo)) {
@@ -28,8 +28,8 @@ void game_object_init(game_object_t* go, const char* vertex_shader, const char* 
 
 	program_init(&go->program);
 
-	char* vertex_shader_path = buffer_create_shader_path(vertex_shader);
-	char* fragment_shader_path = buffer_create_shader_path(fragment_shader);
+	char* vertex_shader_path   = create_shader_path(vertex_shader);
+	char* fragment_shader_path = create_shader_path(fragment_shader);
 
 	if (!program_compile(&go->program, vertex_shader_path, fragment_shader_path)) {
 		fprintf(stderr, "failed to compile shaders.\n");
@@ -44,6 +44,11 @@ void game_object_init(game_object_t* go, const char* vertex_shader, const char* 
 	free(texture_path);
 	free(vertex_shader_path);
 	free(fragment_shader_path);
+}
+
+void game_object_3d_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture, const char* model) {
+	game_object_init(go, vertex_shader, fragment_shader, texture);
+	mesh_load_obj(&go->mesh, model);
 }
 
 void game_object_update_model_matrix(game_object_t* go) {
