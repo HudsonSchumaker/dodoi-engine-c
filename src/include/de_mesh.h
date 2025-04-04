@@ -20,6 +20,8 @@ typedef struct {
 	int uv_count;
 	int normal_count;
 	int index_count;
+
+	float* vertex_data_as_array;
 } mesh_t;
 
 mesh_t* mesh_new(void);
