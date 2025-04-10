@@ -3,6 +3,7 @@
 
 float minf(float a, float b);
 float maxf(float a, float b);
+float randf(float min, float max);
 float wrapf(float value, float min_val, float max_val);
 float clampf(float value, float min_val, float max_val);
 float deg_to_radf(float degrees);

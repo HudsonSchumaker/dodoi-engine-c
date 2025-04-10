@@ -16,6 +16,10 @@ float maxf(register float a, register float b) {
     return (a > b) ? a : b;
 }
 
+float randf(register float min, register float max) {
+    return min + (float)rand() / ((float)RAND_MAX / (max - min));
+}
+
 float clampf(register float value, register float min_val, register float max_val) {
     return maxf(min_val, minf(value, max_val));
 }
