@@ -153,7 +153,9 @@
     <ClCompile Include="src\engine\3d\de_vbo.c" />
     <ClCompile Include="src\engine\core\de_camera.c" />
     <ClCompile Include="src\engine\core\de_fps_camera.c" />
+    <ClCompile Include="src\engine\core\de_list.c" />
     <ClCompile Include="src\engine\core\de_orbit_camera.c" />
+    <ClCompile Include="src\engine\core\de_set.c" />
     <ClCompile Include="src\engine\core\de_util.c" />
     <ClCompile Include="src\engine\gfx\de_gfx.c" />
     <ClCompile Include="src\engine\gfx\de_scene.c" />
@@ -171,6 +173,7 @@
     <ClCompile Include="src\playground\title_screen.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\include\de_collection.h" />
     <ClInclude Include="src\include\de_buffer.h" />
     <ClInclude Include="src\include\de_camera.h" />
     <ClInclude Include="src\include\de_cube.h" />
