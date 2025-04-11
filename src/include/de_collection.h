@@ -35,6 +35,7 @@ typedef struct {
 
 // List functions
 void list_init(list_t* list, size_t type_size);
+void list_init_size(list_t* list, size_t type_size, size_t reserve);
 void list_add(list_t* list, void* value);
 void* list_get(list_t* list, size_t index);
 size_t list_size(list_t* list);

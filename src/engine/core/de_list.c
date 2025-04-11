@@ -15,6 +15,13 @@ void list_init(list_t* list, size_t type_size) {
     list->array = malloc(list->capacity * list->type_size);
 }
 
+void list_init_size(list_t* list, size_t type_size, size_t reserve) {
+	list->size = 0;
+	list->capacity = reserve;
+	list->type_size = type_size;
+	list->array = malloc(list->capacity * list->type_size);
+}
+
 void list_resize(list_t* list, size_t new_capacity) {
     if (new_capacity > list->capacity) {
         void* new_value = realloc(list->array, new_capacity * list->type_size);
