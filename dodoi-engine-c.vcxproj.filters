@@ -108,6 +108,9 @@
     <ClCompile Include="src\engine\core\de_set.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\core\de_queue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\pch.h">

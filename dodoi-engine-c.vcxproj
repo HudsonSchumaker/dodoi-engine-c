@@ -155,6 +155,7 @@
     <ClCompile Include="src\engine\core\de_fps_camera.c" />
     <ClCompile Include="src\engine\core\de_list.c" />
     <ClCompile Include="src\engine\core\de_orbit_camera.c" />
+    <ClCompile Include="src\engine\core\de_queue.c" />
     <ClCompile Include="src\engine\core\de_set.c" />
     <ClCompile Include="src\engine\core\de_util.c" />
     <ClCompile Include="src\engine\gfx\de_gfx.c" />
