@@ -11,6 +11,7 @@
 #include "../include/de_gfx.h"
 #include "../include/de_cube.h"
 #include "../include/de_util.h"
+#include "../include/de_math.h"
 #include "../include/de_camera.h"
 
 static bool running = false;
@@ -21,18 +22,16 @@ static mat4_t projection;
 static mat4_t view;
 
 static cube_t cube;
-static cube_t cube2;
-static cube_t cube3;
 static cube_t _floor;
 
 static vec3_t target = { 0.0f, 0.0f, 0.0f };
 static vec3_t position = { 0.0f, 1.0f, -5.0f };
 
-static vec3_t cube_pos = { -10.0f, 2.0f, 10.0f };
-static vec3_t cube_pos2 = { 0.0f, 2.0f, 10.0f };
-static vec3_t cube_pos3 = { 10.0f, 2.0f, 10.0f };
+static vec3_t cube_pos = { 0.0f, 2.0f, 10.0f };
 static vec3_t floor_pos = { 0.0f, .0f, 0.0f };
 float angle = 45.0f;
+
+static mesh_t* mesh = NULL;
 
 void check_gl_error(const char* function) {
     GLenum error = glGetError();
@@ -71,14 +70,10 @@ void splash_screen_init(void) {
 }
 
 void splash_screen_load(void) {
-	cube_init(&cube, "cube.vert", "cube.frag", "icon.png");
-    cube_init(&cube2, "cube.vert", "cube.frag", "cube.png");
-    cube_init(&cube3, "cube.vert", "cube.frag", "crate.jpg");
-	cube_init(&_floor, "cube.vert", "cube.frag", "grid.jpg");
+	cube_init(&cube, "cube.vert", "cube.frag", "icon.png", "tri.obj");
+	//cube_init(&_floor, "cube.vert", "cube.frag", "grid.jpg", "floor.obj");
 	
     cube_set_position(&cube, &cube_pos);
-    cube_set_position(&cube2, &cube_pos2);
-    cube_set_position(&cube3, &cube_pos3);
 	cube_set_position(&_floor, &floor_pos);
 
 	vec3_t scale = vec3_new(20.0f, 0.1f, 20.0f);
@@ -87,6 +82,7 @@ void splash_screen_load(void) {
     camera = fps_camera_new(position, target);
 
 	gfx_set_clear_color(0.0f, 0.2f, 0.0f, 1.0f);
+
     running = true;
     printf("Splash Screen: Load\n");
 }
@@ -117,7 +113,7 @@ void splash_screen_input(void) {
             float yaw   = -deltaX / 4 + sdlEvent.motion.xrel * MOUSE_SENSITIVITY * scene_manager_get_delta_time();
             float pitch = deltaY  / 4 + sdlEvent.motion.yrel * MOUSE_SENSITIVITY * scene_manager_get_delta_time();
 
-            fps_camera_set_rotation(camera, yaw, pitch);
+            //fps_camera_set_rotation(camera, yaw, pitch);
             lastMouseX = mouseX;
             lastMouseY = mouseY;
 			break;
@@ -174,39 +170,29 @@ void splash_screen_input(void) {
 }
 
 void splash_screen_update(void) {
-	fps_camera_update(camera);
-	
-	projection = mat4_identity();
-    float fov = deg_to_rad(FOV);
-	projection = mat4_perspective(fov, gfx_get_aspect_ratio(), 0.1f, 100.0f);
-	
-	view = mat4_identity();
-    view = mat4_look_at(&camera->coords.eye, &camera->coords.target, &camera->coords.up); 
+    fps_camera_update(camera);
 
-	vec3_t rotation = { 0.0f, 0.0f, angle };
-	cube_set_rotation(&cube, &rotation);
+    projection = mat4_identity();
+    projection = camera_perspective(0.1f, 100.0f);
+
+    view = mat4_identity();
+    view = camera_look_at(&camera->coords);
+
+    vec3_t rotation = { 0.0f, 0.0f, angle };
+    cube_set_rotation(&cube, &rotation);
     cube_update(&cube);
 
-    cube_set_rotation(&cube2, &rotation);
-    cube_update(&cube2);
+    //cube_set_rotation(&_floor, &rotation);
+    cube_update(&_floor);
 
-    cube_set_rotation(&cube3, &rotation);
-    cube_update(&cube3);
-
-	//cube_set_rotation(&_floor, &rotation);
-	cube_update(&_floor);
-
-    angle += deg_to_rad(5000.0f * scene_manager_get_delta_time());
-
-    //if (angle > 2 * PI) angle -= 2 * PI;
+    angle += 25.0f * scene_manager_get_delta_time();
+    angle = normalize_anglef(angle);
 }
 
 void splash_screen_render(void) {
 	gfx_clear_screen();
 
 	cube_render(&cube, &view, &projection);
-    cube_render(&cube2, &view, &projection);
-    cube_render(&cube3, &view, &projection);
 	cube_render(&_floor, &view, &projection);
 	
 	gfx_swap_screen();
@@ -224,8 +210,7 @@ short splash_screen_run(void) {
 
 void splash_screen_unload(void) {
 	cube_delete(&cube);
-    cube_delete(&cube2);
-    cube_delete(&cube3);
+	cube_delete(&_floor);
     printf("Splash Screen: Unload\n");
 }
 

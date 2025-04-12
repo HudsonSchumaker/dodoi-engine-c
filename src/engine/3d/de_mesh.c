@@ -28,6 +28,6 @@ void mesh_delete(mesh_t* mesh) {
 	free(mesh->vertices);
 	free(mesh->uvs);
 	free(mesh->normals);
-	free(mesh->indices);
+	free(mesh->faces);
 	free(mesh);
 }

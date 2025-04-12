@@ -7,73 +7,116 @@
 * @copyright Copyright (c) 2025, Dodoi-Lab
 */
 #include "../../include/de_obj_loader.h"
+#include "../../include/de_collection.h"
 
 void obj_load(mesh_t* mesh, const char* path) {
-    FILE* file = fopen(path, "r");
-    if (file == NULL) {
-        fprintf(stderr, "failed to open file: %s.\n", path);
-        return;
-    }
+	FILE* file = fopen(path, "r");
+	if (file == NULL) {
+		fprintf(stderr, "failed to open file: %s.\n", path);
+		return;
+	}
 
-    char line[128];
-    unsigned int vertex_count = 0, uv_count = 0, normal_count = 0, face_count = 0;
+	list_t* vertices = NULL;
+	list_init(&vertices, sizeof(vec3_t));
 
-    // count the number of vertices, uvs, normals, and indices
-    while (fgets(line, sizeof(line), file)) {
-        if (strncmp(line, "v ", 2) == 0) {
-            vertex_count++;
-        }
-        else if (strncmp(line, "vt ", 3) == 0) {
-            uv_count++;
-        }
-        else if (strncmp(line, "vn ", 3) == 0) {
-            normal_count++;
-        }
-        else if (strncmp(line, "f ", 2) == 0) {
-            face_count += 3; // triangles
-        }
-    }
+	list_t* normals = NULL;
+	list_init(&normals, sizeof(vec3_t));
 
-    // allocate memory for mesh data
-    mesh->vertices = (vec3_t*)malloc(vertex_count * sizeof(vec3_t));
-    mesh->uvs     = (vec2_t*)malloc(uv_count * sizeof(vec2_t));
-    mesh->normals = (vec3_t*)malloc(normal_count * sizeof(vec3_t));
-    mesh->indices = (int*)malloc(face_count * sizeof(int));
+	list_t* uvs = NULL;
+	list_init(&uvs, sizeof(tex2_t));
 
-    mesh->vertex_count = vertex_count;
-    mesh->uv_count = uv_count;
-    mesh->normal_count = normal_count;
-    mesh->index_count = face_count;
+	list_t* faces = NULL;
+	list_init(&faces, sizeof(face_t));
 
-	// reset counts for actual data
-    vertex_count = 0;
-    uv_count = 0;
-    normal_count = 0;
-    face_count = 0;
+	char line[256];
+	fseek(file, 0, SEEK_SET);
+	while (fgets(line, sizeof(line), file)) {
+		if (strncmp(line, "v ", 2) == 0) {
+			vec3_t vertex;
+			sscanf_s(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
+			list_add(&vertices, &vertex);
+		}
+		else if (strncmp(line, "vt ", 3) == 0) {
+			tex2_t uv;
+			sscanf_s(line, "vt %f %f", &uv.u, &uv.v);
+			list_add(&uvs, &uv);
+		}
+		else if (strncmp(line, "vn ", 3) == 0) {
+			vec3_t normal;
+			sscanf_s(line, "vn %f %f %f", &normal.x, &normal.y, &normal.z);
+			list_add(&normals, &normal);
+		}
 
-    // read the actual data
-    fseek(file, 0, SEEK_SET);
-    while (fgets(line, sizeof(line), file)) {
-        if (strncmp(line, "v ", 2) == 0) {
-            sscanf_s(line, "v %f %f %f", &mesh->vertices[vertex_count].x, &mesh->vertices[vertex_count].y, &mesh->vertices[vertex_count].z);
-            vertex_count++;
-        }
-        else if (strncmp(line, "vt ", 3) == 0) {
-            sscanf_s(line, "vt %f %f", &mesh->uvs[uv_count].x, &mesh->uvs[uv_count].y);
-            uv_count++;
-        }
-        else if (strncmp(line, "vn ", 3) == 0) {
-            sscanf_s(line, "vn %f %f %f", &mesh->normals[normal_count].x, &mesh->normals[normal_count].y, &mesh->normals[normal_count].z);
-            normal_count++;
-        }
-        else if (strncmp(line, "f ", 2) == 0) {
-            int vertexIndex[3], uvIndex[3], normalIndex[3];
-            sscanf_s(line, "f %d/%d/%d %d/%d/%d %d/%d/%d", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-            mesh->indices[face_count++] = vertexIndex[0] - 1;
-            mesh->indices[face_count++] = vertexIndex[1] - 1;
-            mesh->indices[face_count++] = vertexIndex[2] - 1;
-        }
-    }
+		else if (strncmp(line, "f ", 2) == 0) {
+			face_t face;
+			sscanf_s(line, "f %d/%d/%d %d/%d/%d %d/%d/%d",
+				&face.vertex[0], &face.uv[0], &face.normal[0],
+				&face.vertex[1], &face.uv[1], &face.normal[1],
+				&face.vertex[2], &face.uv[2], &face.normal[2]);
 
-    fclose(file);
+			// Adjust for 1-based indexing
+			for (byte i = 0; i < 3; i++) {
+				face.vertex[i] -= 1;
+				face.uv[i] -= 1;
+				face.normal[i] -= 1;
+			}
+			list_add(&faces, &face);
+		}
+	}
+	fclose(file);
+
+	int vertex_count = list_size(&vertices);
+	int normal_count = list_size(&normals);
+	int uv_count     = list_size(&uvs);
+	int face_count   = list_size(&faces);
+
+	mesh->vertex_count = vertex_count;
+	mesh->normal_count = normal_count;
+	mesh->uv_count     = uv_count;
+	mesh->face_count   = face_count;
+
+	mesh->vertices = (vec3_t*)malloc(sizeof(vec3_t) * vertex_count);
+	if (mesh->vertices == NULL) {
+		fprintf(stderr, "Memory allocation failed for vertices.\n");
+		return;
+	}
+
+	mesh->normals = (vec3_t*)malloc(sizeof(vec3_t) * normal_count);
+	if (mesh->normals == NULL) {
+		fprintf(stderr, "Memory allocation failed for normals.\n");
+		return;
+	}
+
+	mesh->uvs = (tex2_t*)malloc(sizeof(tex2_t) * uv_count);
+	if (mesh->uvs == NULL) {
+		fprintf(stderr, "Memory allocation failed for uvs.\n");
+		return;
+	}
+
+	mesh->faces = (face_t*)malloc(sizeof(face_t) * face_count);
+	if (mesh->faces == NULL) {
+		fprintf(stderr, "Memory allocation failed for faces.\n");
+		return;
+	}
+
+	for (int i = 0; i < vertex_count; i++) {
+		mesh->vertices[i] = *(vec3_t*)list_get(&vertices, i);
+	}
+
+	for (int i = 0; i < normal_count; i++) {
+		mesh->normals[i] = *(vec3_t*)list_get(&normals, i);
+	}
+
+	for (int i = 0; i < uv_count; i++) {
+		mesh->uvs[i] = *(tex2_t*)list_get(&uvs, i);
+	}
+
+	for (int i = 0; i < face_count; i++) {
+		mesh->faces[i] = *(face_t*)list_get(&faces, i);
+	}
+
+	list_free(&vertices);
+	list_free(&normals);
+	list_free(&uvs);
+	list_free(&faces);
 }

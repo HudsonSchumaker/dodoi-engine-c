@@ -8,20 +8,19 @@
 */
 #pragma once
 #include "pch.h"
+#include "de_model.h"
 #include "de_vector.h"
 
 typedef struct {
 	vec3_t* vertices;
-	vec2_t* uvs;
 	vec3_t* normals;
-
-	unsigned int* indices;
+	tex2_t* uvs;
+	face_t* faces;
+	
 	int vertex_count;
-	int uv_count;
 	int normal_count;
-	int index_count;
-
-	float* vertex_data_as_array;
+	int uv_count;
+	int face_count;
 } mesh_t;
 
 mesh_t* mesh_new(void);

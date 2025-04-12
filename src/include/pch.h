@@ -7,6 +7,7 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #pragma once
+#include <time.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdint.h>

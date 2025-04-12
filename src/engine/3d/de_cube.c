@@ -8,49 +8,16 @@
 */
 #include "../../include/de_cube.h"
 
-static float vertices[] = {
-    // Positions          // Texture Coords
-    -1.0f,  1.0f,  1.0f,  0.0f, 1.0f, // Front top left
-     1.0f, -1.0f,  1.0f,  1.0f, 0.0f, // Front bottom right
-     1.0f,  1.0f,  1.0f,  1.0f, 1.0f, // Front top right
-    -1.0f, -1.0f,  1.0f,  0.0f, 0.0f, // Front bottom left
-    -1.0f,  1.0f, -1.0f,  0.0f, 1.0f, // Back top left
-     1.0f, -1.0f, -1.0f,  1.0f, 0.0f, // Back bottom right
-     1.0f,  1.0f, -1.0f,  1.0f, 1.0f, // Back top right
-    -1.0f, -1.0f, -1.0f,  0.0f, 0.0f, // Back bottom left
-};
+void cube_init(cube_t* cube, const char* vertex_shader, const char* fragment_shader, const char* texture, const char* model) {
+	game_object_3d_init(&cube->go, vertex_shader, fragment_shader, texture, model);
 
-static unsigned int indices[] = {
-    // Front face
-    0, 1, 2,
-    0, 3, 1,
-    // Back face
-    4, 5, 6,
-    4, 7, 5,
-    // Left face
-    4, 0, 3,
-    4, 3, 7,
-    // Right face
-    2, 1, 5,
-    2, 5, 6,
-    // Top face
-    4, 6, 2,
-    4, 2, 0,
-    // Bottom face
-    3, 1, 5,
-    3, 5, 7,
-};
-
-void cube_init(cube_t* cube, const char* vertex_shader, const char* fragment_shader, const char* texture) {
-	game_object_init(&cube->go, vertex_shader, fragment_shader, texture);
-	
     vao_bind(&cube->go.vao);
-	vbo_set_data(&cube->go.vbo, vertices, sizeof(vertices));
-	ebo_set_data(&cube->go.ebo, indices, sizeof(indices));
+	vbo_set_data(&cube->go.vbo, cube->go.mesh.vertices, cube->go.mesh.vertex_count * 8 * sizeof(float));
+	ebo_set_data(&cube->go.ebo, cube->go.mesh.faces,    cube->go.mesh.face_count * sizeof(unsigned int));
 	
-    vao_link_vbo_3f2f();
+    vao_link_vbo_3f3f2f();
 	
-    buffer_bind(&cube->go.vao, &cube->go.vbo, &cube->go.ebo);
+    buffer_unbind(&cube->go.vao, &cube->go.vbo, &cube->go.ebo);
 }
 
 void cube_render(cube_t* cube, mat4_t* view, mat4_t* projection) {
@@ -63,7 +30,7 @@ void cube_render(cube_t* cube, mat4_t* view, mat4_t* projection) {
 	program_set_uniform_mat4f(cube->go.uniform_view, view);
 	program_set_uniform_mat4f(cube->go.uniform_projection, projection);
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, cube->go.mesh.index_count, GL_UNSIGNED_INT, 0);
 
 	buffer_unbind(&cube->go.vao, &cube->go.vbo, &cube->go.ebo);
 	program_unset();

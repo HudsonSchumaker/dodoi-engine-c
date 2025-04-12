@@ -42,15 +42,21 @@ typedef struct {
 typedef struct {
     union {
         struct {
-            float x;
-            float y;
+            float u;
+            float v;
         };
         float as_array[2];
     };
-} text2_t;
+} tex2_t;
 
 typedef struct {
     vec3_t position;
     vec3_t normal;
-    text2_t uv;
+    tex2_t uv;
 } vertex_t;
+
+typedef struct {
+	int vertex[3];
+	int uv[3];
+	int normal[3];
+} face_t;
