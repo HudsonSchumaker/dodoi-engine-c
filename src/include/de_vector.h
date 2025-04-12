@@ -80,15 +80,18 @@ vec3_t vec3_clone(const vec3_t* v);
 void vec3_normalize(vec3_t* v);
 void vec3_scale(vec3_t* v, float s);
 
+// Arithmetic functions
 vec3_t vec3_add(const vec3_t* a, const vec3_t* b);
 vec3_t vec3_sub(const vec3_t* a, const vec3_t* b);
 vec3_t vec3_mul(const vec3_t* v, const float s);
 vec3_t vec3_div(const vec3_t* v, const float s);
 
+// Rotation functions
 vec3_t vec3_rotate_x(const vec3_t* v, const float rx);
 vec3_t vec3_rotate_y(const vec3_t* v, const float ry);
 vec3_t vec3_rotate_z(const vec3_t* v, const float rz);
 
+// Transformation functions
 vec3_t vec3_cross(const vec3_t* a, const vec3_t* b);
 vec3_t vec3_normal(const vec3_t* v);
 vec3_t vec3_unit_vector(const vec3_t* v);
