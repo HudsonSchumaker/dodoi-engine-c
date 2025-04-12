@@ -26,22 +26,29 @@ void mat3_to_array(const mat3_t* mat, float* array);
 
 // Mat4 functions
 mat4_t mat4_identity(void);
+
+// Scale function
 mat4_t mat4_make_scale(const float sx, const float sy, const float sz);
 
+// Rotation functions
 mat4_t mat4_make_rotation_x(const float rx);
 mat4_t mat4_make_rotation_y(const float ry);
 mat4_t mat4_make_rotation_z(const float rz);
 
+// Translation function
 mat4_t mat4_make_translation(const float tx, const float ty, const float tz);
 
+// Matrix multiplication functions
 vec4_t mat4_mul_vec4(const mat4_t* m, const vec4_t* v);
 vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v);
 
 mat4_t mat4_mul_mat4(const mat4_t* a, const mat4_t* b);
 mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b);
 
+// 3d Camera functions
 mat4_t mat4_look_at(const vec3_t* eye, const vec3_t* target, const vec3_t* up);
 mat4_t mat4_perspective(const float fov, const float aspect, const float near, const float far);
 mat4_t mat4_orthographic(const float left, const float right, const float bottom, const float top, const float near, const float far);
 
+// Matrix transpose function
 void mat4_to_array(const mat4_t* mat, float* array);
