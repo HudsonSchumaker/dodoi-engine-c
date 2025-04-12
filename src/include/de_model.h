@@ -51,6 +51,6 @@ typedef struct {
 
 typedef struct {
     vec3_t position;
-    vec2_t uv;
     vec3_t normal;
+    text2_t uv;
 } vertex_t;
