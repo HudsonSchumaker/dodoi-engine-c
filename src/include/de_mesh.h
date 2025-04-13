@@ -12,17 +12,15 @@
 #include "de_vector.h"
 
 typedef struct {
-	vec3_t* vertices;
-	vec3_t* normals;
-	tex2_t* uvs;
+	vertex_t* vertices; 
 	face_t* faces;
 	
 	int vertex_count;
-	int normal_count;
-	int uv_count;
 	int face_count;
 } mesh_t;
 
 mesh_t* mesh_new(void);
 void mesh_load_obj(mesh_t* mesh, const char* path);
+unsigned int* mesh_index_to_gl_buffer(mesh_t* mesh);
+float* mesh_vertex_to_gl_buffer(mesh_t* mesh);
 void mesh_delete(mesh_t* mesh);

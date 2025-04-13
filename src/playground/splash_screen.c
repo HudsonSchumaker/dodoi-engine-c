@@ -70,8 +70,8 @@ void splash_screen_init(void) {
 }
 
 void splash_screen_load(void) {
-	cube_init(&cube, "cube.vert", "cube.frag", "icon.png", "tri.obj");
-	//cube_init(&_floor, "cube.vert", "cube.frag", "grid.jpg", "floor.obj");
+	cube_init(&cube, "cube.vert", "cube.frag", "icon.png", "cube.obj");
+	cube_init(&_floor, "cube.vert", "cube.frag", "grid.jpg", "floor.obj");
 	
     cube_set_position(&cube, &cube_pos);
 	cube_set_position(&_floor, &floor_pos);
@@ -171,6 +171,7 @@ void splash_screen_input(void) {
 
 void splash_screen_update(void) {
     fps_camera_update(camera);
+   
 
     projection = mat4_identity();
     projection = camera_perspective(0.1f, 100.0f);
@@ -178,7 +179,7 @@ void splash_screen_update(void) {
     view = mat4_identity();
     view = camera_look_at(&camera->coords);
 
-    vec3_t rotation = { 0.0f, 0.0f, angle };
+    vec3_t rotation = { angle, angle, angle };
     cube_set_rotation(&cube, &rotation);
     cube_update(&cube);
 
@@ -190,6 +191,7 @@ void splash_screen_update(void) {
 }
 
 void splash_screen_render(void) {
+    gfx_set_3d_mode();
 	gfx_clear_screen();
 
 	cube_render(&cube, &view, &projection);

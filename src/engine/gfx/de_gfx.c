@@ -86,7 +86,6 @@ void gfx_init(bool fullscreen, bool vsync) {
 
     // Enable v-sync (set 1 to enable, 0 to disable)
     SDL_GL_SetSwapInterval(vsync ? 1 : 0);
-    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
 }
 
