@@ -158,6 +158,7 @@
     <ClCompile Include="src\engine\core\de_queue.c" />
     <ClCompile Include="src\engine\core\de_set.c" />
     <ClCompile Include="src\engine\core\de_util.c" />
+    <ClCompile Include="src\engine\gfx\de_color.c" />
     <ClCompile Include="src\engine\gfx\de_gfx.c" />
     <ClCompile Include="src\engine\gfx\de_scene.c" />
     <ClCompile Include="src\engine\gfx\glad.c" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\include\de_collection.h" />
     <ClInclude Include="src\include\de_buffer.h" />
     <ClInclude Include="src\include\de_camera.h" />
+    <ClInclude Include="src\include\de_color.h" />
     <ClInclude Include="src\include\de_cube.h" />
     <ClInclude Include="src\include\de_game_object.h" />
     <ClInclude Include="src\include\de_gfx.h" />

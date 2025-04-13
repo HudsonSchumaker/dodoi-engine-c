@@ -8,9 +8,12 @@
 */
 #include "../../include/de_collection.h"
 
+#define LIST_INIT_CAPACITY 128
+#define LIST_RESIZE_FACTOR 256
+
 void list_init(list_t* list, size_t type_size) {
     list->size = 0;
-    list->capacity = 128;
+    list->capacity = LIST_INIT_CAPACITY;
     list->type_size = type_size;
     list->array = malloc(list->capacity * list->type_size);
 }
@@ -37,7 +40,7 @@ void list_resize(list_t* list, size_t new_capacity) {
 
 void list_add(list_t* list, void* value) {
     if (list->size == list->capacity) {
-        list_resize(list, list->capacity + 256);
+        list_resize(list, list->capacity + LIST_RESIZE_FACTOR);
     }
     memcpy((char*)list->array + list->size * list->type_size, value, list->type_size);
     list->size++;

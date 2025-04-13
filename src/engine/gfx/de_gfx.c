@@ -7,7 +7,7 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_gfx.h"
-#include "../../include/de_model.h"
+#include "../../include/de_color.h"
 
 static SDL_Window* window = NULL;
 static SDL_GLContext* context = NULL;

@@ -21,6 +21,11 @@ typedef struct {
 } fpair_t;
 
 typedef struct {
+	bool first;
+	bool second;
+} bpair_t;
+
+typedef struct {
     int first;
     int second;
     int third;
@@ -31,13 +36,6 @@ typedef struct {
     float second;
     float third;
 } ftriple_t;
-
-typedef struct {
-	float r;
-	float g;
-	float b;
-	float a;
-} color_t;
 
 typedef struct {
     union {

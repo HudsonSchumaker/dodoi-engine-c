@@ -67,14 +67,14 @@ void obj_load(mesh_t* mesh, const char* path) {
 	}
 	fclose(file);
 
-	int vertex_count = list_size(&vertices);
-	int normal_count = list_size(&normals);
-	int uv_count     = list_size(&uvs);
-	int face_count   = list_size(&faces);
+	int vertex_count = (int)list_size(&vertices);
+	int normal_count = (int)list_size(&normals);
+	int uv_count     = (int)list_size(&uvs);
+	int face_count   = (int)list_size(&faces);
 
 	// Transfer data to mesh
-	mesh->vertex_count = list_size(&vertices);
-	mesh->face_count = list_size(&faces);
+	mesh->vertex_count = vertex_count;
+	mesh->face_count   = face_count;
 
 	mesh->vertices = (vertex_t*)malloc(sizeof(vertex_t) * mesh->vertex_count);
 	mesh->faces = (face_t*)malloc(sizeof(face_t) * mesh->face_count);

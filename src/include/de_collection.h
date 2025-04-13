@@ -48,9 +48,27 @@ void list_free(list_t* list);
 
 // Set functions
 void set_init(set_t* set, size_t type_size, int (*equals)(const void*, const void*));
+void set_init_size(set_t* set, size_t type_size, size_t reserve, int (*equals)(const void*, const void*));
 void set_add(set_t* set, void* value);
 void* set_get(set_t* set, size_t index);
 bool set_contains(set_t* set, void* value);
+
+// Equality functions
+int set_equals_int(const void* a, const void* b);
+int set_equals_float(const void* a, const void* b);
+int set_equals_double(const void* a, const void* b);
+int set_equals_string(const void* a, const void* b);
+int set_equals_vec2(const void* a, const void* b);
+int set_equals_vec3(const void* a, const void* b);
+int set_equals_vec4(const void* a, const void* b);
+int set_equals_color(const void* a, const void* b);
+int set_equals_tex2(const void* a, const void* b);
+int set_equals_ipair(const void* a, const void* b);
+int set_equals_fpair(const void* a, const void* b);
+int set_equals_bpair(const void* a, const void* b);
+int set_equals_itriple(const void* a, const void* b);
+int set_equals_ftriple(const void* a, const void* b);
+int set_equals_vertex(const void* a, const void* b);
 void set_free(set_t* set);
 
 // Queue functions
