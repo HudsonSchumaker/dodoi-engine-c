@@ -32,7 +32,7 @@ typedef struct {
 // Buffer
 void buffer_init(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
 void buffer_bind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
-void buffer_unbind(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
+void buffer_unbind(void);
 void buffer_delete(vao_t* vao, vbo_t* vbo, ebo_t* ebo);
 
 // Vertex Array Object (VAO)

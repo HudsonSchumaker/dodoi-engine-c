@@ -34,8 +34,7 @@ void cube_init(cube_t* cube, const char* vertex_shader, const char* fragment_sha
 	ebo_set_data(&cube->go.ebo, mesh_index_to_gl_buffer(&cube->go.mesh), cube->go.mesh.face_count * 3 * sizeof(unsigned int));
 	
     vao_link_vbo_3f3f2f();
-	
-    buffer_unbind(&cube->go.vao, &cube->go.vbo, &cube->go.ebo);
+    buffer_unbind();
 }
 
 void cube_render(cube_t* cube, mat4_t* view, mat4_t* projection) {
@@ -51,7 +50,7 @@ void cube_render(cube_t* cube, mat4_t* view, mat4_t* projection) {
 	//glDrawElements(GL_TRIANGLES, cube->go.mesh.face_count * 3, GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLES, 0, cube->go.mesh.vertex_count);
 
-	buffer_unbind(&cube->go.vao, &cube->go.vbo, &cube->go.ebo);
+	buffer_unbind();
 	program_unset();
 }
 

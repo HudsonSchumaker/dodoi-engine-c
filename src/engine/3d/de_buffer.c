@@ -21,7 +21,7 @@ void buffer_bind(vao_t* vao, vbo_t* vbo, ebo_t* ebo) {
 	ebo_bind(ebo);
 }
 
-void buffer_unbind(vao_t* vao, vbo_t* vbo, ebo_t* ebo) {
+void buffer_unbind(void) {
 	ebo_unbind();
 	vbo_unbind();
 	vao_unbind();
