@@ -7,6 +7,7 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_program.h"
+#include "../../include/de_collection.h"
 
 program_t* program_new(void) {
 	program_t* program = (program_t*)malloc(sizeof(program_t));
@@ -48,14 +49,19 @@ bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar
 	program_detach_shader(program, fragment_shader);
 	shader_delete(vertex_shader);
 	shader_delete(fragment_shader);
+
 	return true;
 }
 
 bool program_save_binary(program_t* program, const char* binary_path) {
-	GLint binary_length = 0;
-	GLenum binary_format;
+	GLenum binary_format = program_get_supported_bin_formats();
+	if (binary_format == 0) {
+		fprintf(stderr, "no binary files supported by the driver\n");
+		return false;
+	}
 
 	// Get the length of the binary
+	GLint binary_length = 0;
 	glGetProgramiv(program->id, GL_PROGRAM_BINARY_LENGTH, &binary_length);
 	if (binary_length == 0) {
 		fprintf(stderr, "failed to get program binary length.\n");
@@ -94,18 +100,25 @@ bool program_save_binary(program_t* program, const char* binary_path) {
 	return true;
 }
 
-program_t* program_load_binary(const char* binray_Path) {
+program_t* program_load_binary(const char* binary_path) {
+	GLenum binary_format = program_get_supported_bin_formats();
+	if (binary_format == 0) {
+		fprintf(stderr, "no binary files supported by the driver\n");
+		return false;
+	}
+
 	// Open the file for reading
-	FILE* file = fopen(binray_Path, "rb");
+	FILE* file = fopen(binary_path, "rb");
 	if (file == NULL) {
-		fprintf(stderr, "failed to open file for reading: %s.\n", binray_Path);
+		fprintf(stderr, "failed to open file for reading: %s.\n", binary_path);
 		return NULL;
 	}
+
 	// Read the binary format and length from the file
-	GLenum binary_format;
 	GLint binary_length;
 	fread(&binary_format, sizeof(GLenum), 1, file);
 	fread(&binary_length, sizeof(GLint), 1, file);
+	
 	// Allocate memory for the binary
 	GLvoid* binary = malloc(binary_length);
 	if (binary == NULL) {
@@ -113,13 +126,17 @@ program_t* program_load_binary(const char* binray_Path) {
 		fclose(file);
 		return NULL;
 	}
+
 	// Read the binary data from the file
 	fread(binary, 1, binary_length, file);
+
 	// Create a new program
 	program_t* program = program_new();
 	program_init(program);
+	
 	// Load the binary data into the program
 	glProgramBinary(program->id, binary_format, binary, binary_length);
+	
 	// Clean up
 	fclose(file);
 	free(binary);
@@ -131,6 +148,7 @@ bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragmen
 	glAttachShader(program->id, fragment_shader->id);
 	glLinkProgram(program->id);
 	
+	// Check for linking errors
 	GLint result;
 	glGetProgramiv(program->id, GL_LINK_STATUS, &result);
 	if (result != GL_TRUE) {
@@ -145,6 +163,24 @@ bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragmen
 		return false;
 	}
 	return true;
+}
+
+GLenum program_get_supported_bin_formats(void) {
+	GLint num_formats;
+	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &num_formats);
+	if (num_formats == 0) {
+		fprintf(stderr, "no binary files supported by the driver\n");
+		return 0;
+	}
+
+	GLenum* formats = (GLenum*)malloc(num_formats * sizeof(GLenum));
+	if (formats == NULL) {
+		fprintf(stderr, "Failed to allocate memory for binary formats.\n");
+		return 0;
+	}
+
+	glGetIntegerv(GL_PROGRAM_BINARY_FORMATS, (GLenum*)formats);
+	return formats[0]; // Return the first supported format
 }
 
 void program_set(program_t* program) {
