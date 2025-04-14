@@ -25,6 +25,7 @@ orbit_camera_t* orbit_camera_new(void) {
 	return camera;
 }
 
+#pragma intrinsic(cosf, sinf)
 void orbit_camera_update(orbit_camera_t* camera) {
 	camera->coords.eye.x = camera->coords.target.x + camera->radius * cosf(camera->coords.pitch) * sinf(camera->coords.yaw);
 	camera->coords.eye.y = camera->coords.target.y + camera->radius * sinf(camera->coords.pitch);
