@@ -1,0 +1,20 @@
+# Minimal floor with normals and UV coordinates
+
+# Vertices
+v -1.0 0.0  1.0
+v  1.0 0.0  1.0
+v -1.0 0.0 -1.0
+v  1.0 0.0 -1.0
+
+# UV coordinates
+vt 0.0 0.0
+vt 1.0 0.0
+vt 0.0 1.0
+vt 1.0 1.0
+
+# Normals
+vn 0.0 1.0 0.0
+
+# Faces
+f 1/1/1 2/2/1 3/3/1
+f 2/2/1 4/4/1 3/3/1
