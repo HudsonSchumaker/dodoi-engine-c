@@ -26,6 +26,11 @@ typedef struct {
 } bpair_t;
 
 typedef struct {
+	char* first;
+	char* second;
+} cpair_t;
+
+typedef struct {
     int first;
     int second;
     int third;
@@ -36,6 +41,12 @@ typedef struct {
     float second;
     float third;
 } ftriple_t;
+
+typedef struct {
+    char* first;
+    char* second;
+	char* third;
+} ctriple_t;
 
 typedef struct {
     union {
@@ -58,3 +69,9 @@ typedef struct {
 	int uv[3];
 	int normal[3];
 } face_t;
+
+typedef struct {
+    char* name;
+    char* vert;
+    char* frag;
+} recipe_t;
