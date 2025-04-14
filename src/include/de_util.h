@@ -19,3 +19,6 @@ char* create_binary_path(const char* binary);
 
 // String manipulation functions
 char* concat(const char* s1, const char* s2);
+
+// File functions
+bool file_exists(const char* path);

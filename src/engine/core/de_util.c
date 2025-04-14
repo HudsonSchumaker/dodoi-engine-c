@@ -39,3 +39,12 @@ char* concat(const char* s1, const char* s2) {
     memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
     return result;
 }
+
+bool file_exists(const char* path) {
+    FILE* file = fopen(path, "r");
+    if (file) {
+        fclose(file);
+        return true;
+    }
+    return false;
+}
