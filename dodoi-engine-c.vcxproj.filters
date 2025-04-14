@@ -114,6 +114,9 @@
     <ClCompile Include="src\engine\gfx\de_color.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\3d\de_shader_manager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\pch.h">
@@ -186,6 +189,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\de_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\de_shader_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

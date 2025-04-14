@@ -22,6 +22,7 @@ bool program_compile(program_t* program, const GLchar* vertex_path, const GLchar
 bool program_link(program_t* program, shader_t* vertex_shader, shader_t* fragment_shader);
 bool program_save_binary(program_t* program, const char* binary_path);
 program_t* program_load_binary(const char* binray_Path);
+GLenum program_get_supported_bin_formats(void);
 
 // Program management functions
 void program_set(program_t* program);

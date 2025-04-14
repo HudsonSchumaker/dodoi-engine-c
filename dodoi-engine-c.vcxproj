@@ -148,6 +148,7 @@
     <ClCompile Include="src\engine\3d\de_program.c" />
     <ClCompile Include="src\engine\3d\de_quad.c" />
     <ClCompile Include="src\engine\3d\de_shader.c" />
+    <ClCompile Include="src\engine\3d\de_shader_manager.c" />
     <ClCompile Include="src\engine\3d\de_tbo.c" />
     <ClCompile Include="src\engine\3d\de_vao.c" />
     <ClCompile Include="src\engine\3d\de_vbo.c" />
@@ -189,6 +190,7 @@
     <ClInclude Include="src\include\de_quad.h" />
     <ClInclude Include="src\include\de_scene.h" />
     <ClInclude Include="src\include\de_sfx.h" />
+    <ClInclude Include="src\include\de_shader_manager.h" />
     <ClInclude Include="src\include\glad\glad.h" />
     <ClInclude Include="src\include\KHR\khrplatform.h" />
     <ClInclude Include="src\include\de_matrix.h" />
