@@ -15,11 +15,7 @@
 #define SET_RESIZE_FACTOR 128
 
 void set_init(set_t* set, size_t type_size, int (*equals)(const void*, const void*)) {
-    set->size = 0;
-    set->capacity = SET_INIT_CAPACITY;
-    set->type_size = type_size;
-    set->equals = equals;
-    set->array = malloc(set->capacity * set->type_size);
+	set_init_size(set, type_size, SET_INIT_CAPACITY, equals);
 }
 
 void set_init_size(set_t* set, size_t type_size, size_t reserve, int (*equals)(const void*, const void*)) {
@@ -28,6 +24,10 @@ void set_init_size(set_t* set, size_t type_size, size_t reserve, int (*equals)(c
 	set->type_size = type_size;
 	set->equals = equals;
 	set->array = malloc(set->capacity * set->type_size);
+	if (!set->array) {
+		fprintf(stderr, "ERROR: set_t, memory allocation failed.\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
 bool set_contains(set_t* set, void* value) {
@@ -65,8 +65,16 @@ void* set_get(set_t* set, size_t index) {
     return NULL;
 }
 
+int set_equals_short(const void* a, const void* b) {
+	return (*(short*)a == *(short*)b) ? 0 : 1;
+}
+
 int set_equals_int(const void* a, const void* b) {
 	return (*(int*)a == *(int*)b) ? 0 : 1;
+}
+
+int set_equals_long(const void* a, const void* b) {
+	return (*(long*)a == *(long*)b) ? 0 : 1;
 }
 
 int set_equals_float(const void* a, const void* b) {
