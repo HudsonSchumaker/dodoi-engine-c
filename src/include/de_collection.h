@@ -33,6 +33,13 @@ typedef struct {
     size_t type_size; 
 } queue_t;
 
+typedef struct {
+    void* array;
+    size_t size;
+    size_t capacity;
+    size_t type_size;
+} stack_t;
+
 // List functions
 void list_init(list_t* list, size_t type_size);
 void list_init_size(list_t* list, size_t type_size, size_t reserve);
@@ -54,7 +61,9 @@ void* set_get(set_t* set, size_t index);
 bool set_contains(set_t* set, void* value);
 
 // Equality functions
+int set_equals_short(const void* a, const void* b);
 int set_equals_int(const void* a, const void* b);
+int set_equals_long(const void* a, const void* b);
 int set_equals_float(const void* a, const void* b);
 int set_equals_double(const void* a, const void* b);
 int set_equals_string(const void* a, const void* b);
@@ -81,3 +90,10 @@ size_t queue_capacity(queue_t* queue);
 bool queue_is_empty(queue_t* queue);
 void queue_clear(queue_t* queue);
 void queue_free(queue_t* queue);
+
+// Stack functions
+void stack_init(stack_t* stack, size_t type_size);
+void stack_push(stack_t* stack, void* value);
+void* stack_pop(stack_t* stack);
+bool stack_is_empty(stack_t* stack);
+void stack_free(stack_t* stack);
