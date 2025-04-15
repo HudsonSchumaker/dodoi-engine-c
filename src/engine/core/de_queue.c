@@ -8,20 +8,29 @@
 */
 #include "../../include/de_collection.h"
 
+#define Q_INIT_CAPACITY 64
+#define Q_RESIZE_FACTOR 2
+
 void queue_init(queue_t* queue, size_t type_size) {
     queue->size = 0;
     queue->head = 0;
     queue->tail = 0;
-    queue->capacity = 2; 
+    queue->capacity = Q_INIT_CAPACITY;
     queue->type_size = type_size;
     queue->array = malloc(queue->capacity * queue->type_size);
+    if (!queue->array) {
+        fprintf(stderr, "ERROR: queue_t, memory allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void queue_resize(queue_t* queue) {
-    queue->capacity *= 2;
-	void* new_array = malloc(queue->capacity * queue->type_size);
-	if (new_array) {
+    void* new_array = malloc(queue->capacity * Q_RESIZE_FACTOR * queue->type_size);
+    if (new_array) {
+        memcpy(new_array, queue->array, queue->size * queue->type_size);
+        free(queue->array);
         queue->array = new_array;
+        queue->capacity *= Q_RESIZE_FACTOR; // Update capacity after successful allocation
     }
     else {
         fprintf(stderr, "ERROR: queue_t, memory reallocation failed\n");
@@ -39,7 +48,7 @@ void queue_add(queue_t* queue, void* value) {
 }
 
 void* queue_pool(queue_t* queue) {
-    if (queue->size == 0) return;
+    if (queue->size == 0) return NULL;
     void* value = (char*)queue->array + (queue->head * queue->type_size);
     queue->head = (queue->head + 1) % queue->capacity;  // Circular increment
     queue->size--;
