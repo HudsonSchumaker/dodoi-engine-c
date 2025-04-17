@@ -56,6 +56,7 @@
 #define STRIDE_3f_3f_2f 8 * sizeof(GLfloat)
 #define STRIDE_3f_3f_3f 9 * sizeof(GLfloat)
 
+// MVP
 #define EYE "eye"
 #define VIEW "view"
 #define MODEL "model"
@@ -67,6 +68,26 @@
 // Texture
 #define TEXTURE "texture0"
 #define TEXTURE1 "texture1"
+
+// Light
+#define LIGHT_COLOR "light.color"
+#define LIGHT_POSITION "light.position"
+#define LIGHT_DIRECTION "light.direction"
+#define LIGHT_AMBIENT "light.ambient"
+#define LIGHT_DIFFUSE "light.diffuse"
+#define LIGHT_SPECULAR "light.specular"
+
+// Attenuation
+#define LIGHT_LINEAR "light.linear"
+#define LIGHT_CONSTANT "light.constant"
+#define LIGHT_QUADRATIC "light.quadratic"
+
+// Material
+#define MATERIAL_AMBIENT "material.ambient"
+#define MATERIAL_DIFFUSE "material.diffuse"
+#define MATERIAL_DIFFUSE_MAP "material.diffuseMap"
+#define MATERIAL_SPECULAR "material.specular"
+#define MATERIAL_SHININESS "material.shininess"
 
 // Dodoi-Engine folders
 #define MAP_FOLDER "./data/maps/"
