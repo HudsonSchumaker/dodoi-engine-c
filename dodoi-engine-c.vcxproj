@@ -144,6 +144,7 @@
     <ClCompile Include="src\engine\3d\de_cube.c" />
     <ClCompile Include="src\engine\3d\de_ebo.c" />
     <ClCompile Include="src\engine\3d\de_game_object.c" />
+    <ClCompile Include="src\engine\3d\de_light.c" />
     <ClCompile Include="src\engine\3d\de_mesh.c" />
     <ClCompile Include="src\engine\3d\de_program.c" />
     <ClCompile Include="src\engine\3d\de_quad.c" />
@@ -184,6 +185,7 @@
     <ClInclude Include="src\include\de_cube.h" />
     <ClInclude Include="src\include\de_game_object.h" />
     <ClInclude Include="src\include\de_gfx.h" />
+    <ClInclude Include="src\include\de_light.h" />
     <ClInclude Include="src\include\de_math.h" />
     <ClInclude Include="src\include\de_mesh.h" />
     <ClInclude Include="src\include\de_model.h" />
