@@ -228,6 +228,10 @@ void program_set_uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfl
 	glUniform4f(location, x, y, z, w);
 }
 
+void program_set_uniform_vec3f(GLint location, vec3_t value) {
+	glUniform3f(location, value.x, value.y, value.z);
+}
+
 void program_set_uniform_mat3f(GLint location, const mat3_t* matrix) {
 	float mat3_array[MAT3];
 	mat3_to_array(matrix, mat3_array);

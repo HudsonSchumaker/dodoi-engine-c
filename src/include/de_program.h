@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "pch.h"
+#include "de_vector.h"
 #include "de_matrix.h"
 #include "de_shader.h"
 
@@ -38,5 +39,7 @@ void program_set_uniform1f(GLint location, GLfloat value);
 void program_set_uniform2f(GLint location, GLfloat x, GLfloat y);
 void program_set_uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z);
 void program_set_uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+
+void program_set_uniform_vec3f(GLint location, vec3_t value);
 void program_set_uniform_mat3f(GLint location, const mat3_t* matrix);
 void program_set_uniform_mat4f(GLint location, const mat4_t* matrix);
