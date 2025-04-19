@@ -71,6 +71,11 @@ typedef struct {
 } face_t;
 
 typedef struct {
+    vec3_t origin;
+    vec3_t direction;
+} ray_t;
+
+typedef struct {
     char* name;
     char* vert;
     char* frag;

@@ -45,6 +45,9 @@ vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v);
 mat4_t mat4_mul_mat4(const mat4_t* a, const mat4_t* b);
 mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b);
 
+float mat4_determinant(const mat4_t* mat);
+bool mat4_inverse(const mat4_t* mat, mat4_t* result);
+
 // 3d Camera functions
 mat4_t mat4_look_at(const vec3_t* eye, const vec3_t* target, const vec3_t* up);
 mat4_t mat4_perspective(const float fov, const float aspect, const float near, const float far);

@@ -76,6 +76,7 @@ void ebo_destroy(ebo_t* ebo);
 tbo_t* tbo_new(void);
 void tbo_init(tbo_t* tbo, const char* path);
 void tbo_bind(tbo_t* tbo);
+void tbo_bind_slot(tbo_t* tbo, GLuint slot);
 bool tbo_load(tbo_t* tbo);
 void tbo_map_texture(tbo_t* tbo, GLuint texture_unit);
 void tbo_unbind(void);

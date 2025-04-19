@@ -13,9 +13,30 @@
 #include "include/de_collection.h"
 #include "playground/title_screen.h"
 #include "playground/splash_screen.h"
+#include "include/de_shader_manager.h"
+
+void shaders(void);
+bpair_t args(int argc, char* argv[]);
+
+int main(int argc, char* argv[]) {	
+	bpair_t arg = args(argc, argv);
+	gfx_init(arg.first, arg.second);
+
+	shaders();
+	splash_screen_init();
+	title_screen_init();
+
+	scene_t* splash_screen = splash_screen_get_scene();
+	scene_t* title_screen = title_screen_get_scene();
+
+	short r = scene_manager_set_scene(splash_screen);
+	scene_manager_set_scene(title_screen);
+
+	return 0;
+}
 
 bpair_t args(int argc, char* argv[]) {
-	bpair_t result = { false, true };
+	bpair_t result = { false, false };
 	for (int i = 0; i < argc; i++) {
 		if (strcmp(argv[i], "--fullscreen") == 0) {
 			result.first = true;
@@ -27,49 +48,16 @@ bpair_t args(int argc, char* argv[]) {
 	return result;
 }
 
-int main(int argc, char* argv[]) {	
-	vec3_t v0 = { 1.0f, 2.0f, 3.0f };
-	vec3_t v1 = { 1.0f, 2.0f, 3.0f };
-	vec3_t v2 = { 1.0f, 2.0f, 3.0f };
-	vec3_t v3 = { 1.0f, 2.0f, 3.001f };
+void shaders(void) {
+	recipe_t basic = { "basic", "basic.vert", "basic.frag" };
+	recipe_t cube = { "cube", "cube.vert", "cube.frag" };
+	recipe_t direction_light = { "directional-light", "directional-light.vert", "directional-light.frag" };
 
+	list_t shader_recipes;
+	list_init(&shader_recipes, sizeof(recipe_t));
+	list_add(&shader_recipes, &basic);
+	list_add(&shader_recipes, &cube);
+	list_add(&shader_recipes, &direction_light);
 
-	set_t vset;
-	set_init(&vset, sizeof(vec3_t), set_equals_vec3);
-	set_add(&vset, &v0);
-	set_add(&vset, &v1);
-	set_add(&vset, &v2);
-	set_add(&vset, &v2);
-	set_add(&vset, &v3);
-
-	for(int i = 0; i < vset.size; i++) {
-		vec3_t* vec = (vec3_t*)set_get(&vset, i);
-		printf("vec3_t[%d]: %f %f %f\n", i, vec->x, vec->y, vec->z);
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-	bpair_t arg = args(argc, argv);
-	gfx_init(arg.first, arg.second);
-	
-	splash_screen_init();
-	title_screen_init();
-
-	scene_t* splash_screen = splash_screen_get_scene();
-	scene_t* title_screen = title_screen_get_scene();
-
-	short r = scene_manager_set_scene(splash_screen);
-	scene_manager_set_scene(title_screen);
-
-	return 0;
+	shader_mgr_pre_compile(&shader_recipes);
 }

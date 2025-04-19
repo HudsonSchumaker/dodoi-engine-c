@@ -105,6 +105,7 @@ float vec3_magnitude_squared(const vec3_t* v);
 vec4_t vec4_zero(void);
 vec4_t vec4_new(const float x, const float y, const float z, const float w);
 vec4_t vec4_clone(const vec4_t* v);
+vec4_t vec4_div(const vec4_t* v, const float s);
 
 // Convertion functions
 vec3_t vec2_to_vec3(const vec2_t* v);

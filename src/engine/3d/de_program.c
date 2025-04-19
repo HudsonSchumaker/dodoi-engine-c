@@ -228,6 +228,11 @@ void program_set_uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfl
 	glUniform4f(location, x, y, z, w);
 }
 
+void program_set_uniform_sampler(GLint location, GLuint slot) {
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glUniform1i(location, slot);
+}
+
 void program_set_uniform_vec3f(GLint location, vec3_t value) {
 	glUniform3f(location, value.x, value.y, value.z);
 }

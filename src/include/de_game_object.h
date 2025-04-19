@@ -9,6 +9,7 @@
 #pragma once
 #include "pch.h"
 #include "de_mesh.h"
+#include "de_model.h"
 #include "de_buffer.h"
 #include "de_vector.h"
 #include "de_matrix.h"
@@ -41,3 +42,5 @@ void game_object_update_model_matrix(game_object_t* go);
 void game_object_scale(game_object_t* go, const vec3_t* scale);
 void game_object_rotate(game_object_t* go, const vec3_t* rotation);
 void game_object_translate(game_object_t* go, const vec3_t* position);
+
+bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray, int i);

@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "pch.h"
+#include "de_collection.h"
 
 typedef struct {
     GLuint id;

@@ -157,6 +157,7 @@
     <ClCompile Include="src\engine\core\de_camera.c" />
     <ClCompile Include="src\engine\core\de_fps_camera.c" />
     <ClCompile Include="src\engine\core\de_list.c" />
+    <ClCompile Include="src\engine\core\de_mouse.c" />
     <ClCompile Include="src\engine\core\de_orbit_camera.c" />
     <ClCompile Include="src\engine\core\de_queue.c" />
     <ClCompile Include="src\engine\core\de_set.c" />
@@ -191,6 +192,7 @@
     <ClInclude Include="src\include\de_math.h" />
     <ClInclude Include="src\include\de_mesh.h" />
     <ClInclude Include="src\include\de_model.h" />
+    <ClInclude Include="src\include\de_mouse.h" />
     <ClInclude Include="src\include\de_obj_loader.h" />
     <ClInclude Include="src\include\de_quad.h" />
     <ClInclude Include="src\include\de_scene.h" />

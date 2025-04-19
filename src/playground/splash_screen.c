@@ -7,7 +7,6 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "splash_screen.h"
-
 #include "../include/de_gfx.h"
 #include "../include/de_cube.h"
 #include "../include/de_util.h"
@@ -29,7 +28,7 @@ static vec3_t position = { 0.0f, 1.0f, -5.0f };
 
 static vec3_t cube_pos = { 0.0f, 2.0f, 10.0f };
 static vec3_t floor_pos = { 0.0f, .0f, 0.0f };
-float angle = 45.0f;
+static float angle = 45.0f;
 
 static mesh_t* mesh = NULL;
 

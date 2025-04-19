@@ -155,6 +155,73 @@ mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b) {
     return result;
 }
 
+float mat4_determinant(const mat4_t* mat) {
+    float det = 0.0f;
+
+    // Precompute sub-determinants to avoid redundant calculations
+    float sub1 = mat->m[2][2] * mat->m[3][3] - mat->m[2][3] * mat->m[3][2];
+    float sub2 = mat->m[2][1] * mat->m[3][3] - mat->m[2][3] * mat->m[3][1];
+    float sub3 = mat->m[2][1] * mat->m[3][2] - mat->m[2][2] * mat->m[3][1];
+    float sub4 = mat->m[2][0] * mat->m[3][3] - mat->m[2][3] * mat->m[3][0];
+    float sub5 = mat->m[2][0] * mat->m[3][2] - mat->m[2][2] * mat->m[3][0];
+    float sub6 = mat->m[2][0] * mat->m[3][1] - mat->m[2][1] * mat->m[3][0];
+
+    det += mat->m[0][0] * (mat->m[1][1] * sub1 - mat->m[1][2] * sub2 + mat->m[1][3] * sub3);
+    det -= mat->m[0][1] * (mat->m[1][0] * sub1 - mat->m[1][2] * sub4 + mat->m[1][3] * sub5);
+    det += mat->m[0][2] * (mat->m[1][0] * sub2 - mat->m[1][1] * sub4 + mat->m[1][3] * sub6);
+    det -= mat->m[0][3] * (mat->m[1][0] * sub3 - mat->m[1][1] * sub5 + mat->m[1][2] * sub6);
+
+    return det;
+}
+
+bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
+    float det = mat4_determinant(mat);
+    if (fabs(det) < 1e-6f) { // Handle numerical stability
+        return false; // Matrix is not invertible
+    }
+
+    float inv_det = 1.0f / det;
+
+    // Precompute reusable sub-determinants
+    float sub1 = mat->m[2][2] * mat->m[3][3] - mat->m[2][3] * mat->m[3][2];
+    float sub2 = mat->m[2][1] * mat->m[3][3] - mat->m[2][3] * mat->m[3][1];
+    float sub3 = mat->m[2][1] * mat->m[3][2] - mat->m[2][2] * mat->m[3][1];
+    float sub4 = mat->m[2][0] * mat->m[3][3] - mat->m[2][3] * mat->m[3][0];
+    float sub5 = mat->m[2][0] * mat->m[3][2] - mat->m[2][2] * mat->m[3][0];
+    float sub6 = mat->m[2][0] * mat->m[3][1] - mat->m[2][1] * mat->m[3][0];
+
+    // Compute the adjugate matrix (cofactor matrix transposed)
+    result->m[0][0] = (mat->m[1][1] * sub1 - mat->m[1][2] * sub2 + mat->m[1][3] * sub3) * inv_det;
+    result->m[0][1] = -(mat->m[0][1] * sub1 - mat->m[0][2] * sub2 + mat->m[0][3] * sub3) * inv_det;
+    result->m[0][2] = (mat->m[0][1] * sub4 - mat->m[0][2] * sub5 + mat->m[0][3] * sub6) * inv_det;
+    result->m[0][3] = -(mat->m[0][1] * (mat->m[1][2] * mat->m[2][3] - mat->m[1][3] * mat->m[2][2]) -
+        mat->m[0][2] * (mat->m[1][1] * mat->m[2][3] - mat->m[1][3] * mat->m[2][1]) +
+        mat->m[0][3] * (mat->m[1][1] * mat->m[2][2] - mat->m[1][2] * mat->m[2][1])) * inv_det;
+
+    result->m[1][0] = -(mat->m[1][0] * sub1 - mat->m[1][2] * sub4 + mat->m[1][3] * sub5) * inv_det;
+    result->m[1][1] = (mat->m[0][0] * sub1 - mat->m[0][2] * sub4 + mat->m[0][3] * sub5) * inv_det;
+    result->m[1][2] = -(mat->m[0][0] * sub2 - mat->m[0][1] * sub4 + mat->m[0][3] * sub6) * inv_det;
+    result->m[1][3] = (mat->m[0][0] * (mat->m[1][2] * mat->m[2][3] - mat->m[1][3] * mat->m[2][2]) -
+        mat->m[0][1] * (mat->m[1][0] * mat->m[2][3] - mat->m[1][3] * mat->m[2][0]) +
+        mat->m[0][3] * (mat->m[1][0] * mat->m[2][2] - mat->m[1][2] * mat->m[2][0])) * inv_det;
+
+    result->m[2][0] = (mat->m[1][0] * sub2 - mat->m[1][1] * sub4 + mat->m[1][3] * sub6) * inv_det;
+    result->m[2][1] = -(mat->m[0][0] * sub2 - mat->m[0][1] * sub4 + mat->m[0][3] * sub6) * inv_det;
+    result->m[2][2] = (mat->m[0][0] * sub3 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
+    result->m[2][3] = -(mat->m[0][0] * (mat->m[1][1] * mat->m[2][3] - mat->m[1][3] * mat->m[2][1]) -
+        mat->m[0][1] * (mat->m[1][0] * mat->m[2][3] - mat->m[1][3] * mat->m[2][0]) +
+        mat->m[0][3] * (mat->m[1][0] * mat->m[2][1] - mat->m[1][1] * mat->m[2][0])) * inv_det;
+
+    result->m[3][0] = -(mat->m[1][0] * sub3 - mat->m[1][1] * sub5 + mat->m[1][2] * sub6) * inv_det;
+    result->m[3][1] = (mat->m[0][0] * sub3 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
+    result->m[3][2] = -(mat->m[0][0] * sub4 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
+    result->m[3][3] = (mat->m[0][0] * (mat->m[1][1] * mat->m[2][2] - mat->m[1][2] * mat->m[2][1]) -
+        mat->m[0][1] * (mat->m[1][0] * mat->m[2][2] - mat->m[1][2] * mat->m[2][0]) +
+        mat->m[0][2] * (mat->m[1][0] * mat->m[2][1] - mat->m[1][1] * mat->m[2][0])) * inv_det;
+
+    return true;
+}
+
 #pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
     // | (w/h)/1/tan(fov/2)             0              0                 0 |

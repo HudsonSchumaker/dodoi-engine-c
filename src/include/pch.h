@@ -9,6 +9,7 @@
 #pragma once
 #include <time.h>
 #include <math.h>
+#include <float.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -85,9 +86,9 @@
 // Material
 #define MATERIAL_AMBIENT "material.ambient"
 #define MATERIAL_DIFFUSE "material.diffuse"
-#define MATERIAL_DIFFUSE_MAP "material.diffuseMap"
 #define MATERIAL_SPECULAR "material.specular"
 #define MATERIAL_SHININESS "material.shininess"
+#define MATERIAL_DIFFUSE_MAP "material.diffuseMap"
 
 // Dodoi-Engine folders
 #define MAP_FOLDER "./data/maps/"

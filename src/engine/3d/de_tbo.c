@@ -31,6 +31,11 @@ void tbo_bind(tbo_t* tbo) {
 	glBindTexture(GL_TEXTURE_2D, tbo->id);
 }
 
+void tbo_bind_slot(tbo_t* tbo, GLuint slot) {
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glBindTexture(GL_TEXTURE_2D, tbo->id);
+}
+
 bool tbo_load(tbo_t* tbo) {
     SDL_Surface* surface = IMG_Load(tbo->path);
     if (surface == NULL) {

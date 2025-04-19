@@ -39,6 +39,7 @@ void program_set_uniform1f(GLint location, GLfloat value);
 void program_set_uniform2f(GLint location, GLfloat x, GLfloat y);
 void program_set_uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z);
 void program_set_uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+void program_set_uniform_sampler(GLint location, GLuint slot);
 
 void program_set_uniform_vec3f(GLint location, vec3_t value);
 void program_set_uniform_mat3f(GLint location, const mat3_t* matrix);

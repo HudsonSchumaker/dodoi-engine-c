@@ -23,6 +23,10 @@ vec4_t vec4_new(const float x, const float y, const float z, const float w) {
     return new_vec4;
 }
 
+vec4_t vec4_div(const vec4_t* v, const float s) {
+    return (vec4_t) { v->x / s, v->y / s, v->z / s, v->w / s };
+}
+
 vec4_t vec4_clone(const vec4_t* v) {
     return vec4_new(v->x, v->y, v->z, v->w);
 }
