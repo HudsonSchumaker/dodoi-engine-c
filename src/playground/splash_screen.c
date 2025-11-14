@@ -24,10 +24,10 @@ static cube_t cube;
 static cube_t _floor;
 
 static vec3_t target = { 0.0f, 0.0f, 0.0f };
-static vec3_t position = { 0.0f, 1.0f, -5.0f };
+static vec3_t position = { 0.0f, 1.0f, 0.0f };
 
-static vec3_t cube_pos = { 0.0f, 2.0f, 10.0f };
-static vec3_t floor_pos = { 0.0f, .0f, 0.0f };
+static vec3_t cube_pos = { 0.0f, 2.0f, -10.0f };
+static vec3_t floor_pos = { 0.0f, 0.0f, 0.0f };
 static float angle = 45.0f;
 
 static mesh_t* mesh = NULL;
@@ -119,11 +119,11 @@ void splash_screen_input(void) {
 
 		case SDL_KEYDOWN:
             if (key == SDLK_w || key == SDLK_UP) {
-                direction.z = 1.0f;
+                direction.z = -1.0f;
             }
 
             if (key == SDLK_s || key == SDLK_DOWN) {
-                direction.z = -1.0f;              
+                direction.z = 1.0f;              
             }
 
 			if (key == SDLK_a || key == SDLK_LEFT) {
@@ -171,7 +171,6 @@ void splash_screen_input(void) {
 void splash_screen_update(void) {
     fps_camera_update(camera);
    
-
     projection = mat4_identity();
     projection = camera_perspective(0.1f, 100.0f);
 
