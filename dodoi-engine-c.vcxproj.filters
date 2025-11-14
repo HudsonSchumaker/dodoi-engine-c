@@ -129,6 +129,9 @@
     <ClCompile Include="src\engine\core\de_mouse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\playground\quad_screen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\pch.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\de_mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\playground\quad_screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

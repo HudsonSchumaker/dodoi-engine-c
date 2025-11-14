@@ -176,6 +176,7 @@
     <ClCompile Include="src\engine\math\de_vec4.c" />
     <ClCompile Include="src\engine\sfx\de_sfx.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\playground\quad_screen.c" />
     <ClCompile Include="src\playground\splash_screen.c" />
     <ClCompile Include="src\playground\title_screen.c" />
   </ItemGroup>
@@ -206,6 +207,7 @@
     <ClInclude Include="src\include\de_vector.h" />
     <ClInclude Include="src\include\de_program.h" />
     <ClInclude Include="src\include\de_shader.h" />
+    <ClInclude Include="src\playground\quad_screen.h" />
     <ClInclude Include="src\playground\splash_screen.h" />
     <ClInclude Include="src\playground\title_screen.h" />
   </ItemGroup>
