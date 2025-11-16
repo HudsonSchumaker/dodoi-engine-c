@@ -124,13 +124,14 @@ vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v) {
 }
 
 mat4_t mat4_mul_mat4(const mat4_t* a, const mat4_t* b) {
-    mat4_t m;
+    mat4_t result;
     for (byte i = 0; i < 4; i++) {
-        for (byte j = 0; j < 4; j++) {
-            m.m[i][j] = a->m[i][0] * b->m[0][j] + a->m[i][1] * b->m[1][j] + a->m[i][2] * b->m[2][j] + a->m[i][3] * b->m[3][j];
-        }
+        result.m[i][0] = a->m[i][0] * b->m[0][0] + a->m[i][1] * b->m[1][0] + a->m[i][2] * b->m[2][0] + a->m[i][3] * b->m[3][0];
+        result.m[i][1] = a->m[i][0] * b->m[0][1] + a->m[i][1] * b->m[1][1] + a->m[i][2] * b->m[2][1] + a->m[i][3] * b->m[3][1];
+        result.m[i][2] = a->m[i][0] * b->m[0][2] + a->m[i][1] * b->m[1][2] + a->m[i][2] * b->m[2][2] + a->m[i][3] * b->m[3][2];
+        result.m[i][3] = a->m[i][0] * b->m[0][3] + a->m[i][1] * b->m[1][3] + a->m[i][2] * b->m[2][3] + a->m[i][3] * b->m[3][3];
     }
-    return m;
+    return result;
 }
 
 mat4_t mat4_mul_mat4_sse(const mat4_t* a, const mat4_t* b) {
@@ -176,7 +177,7 @@ float mat4_determinant(const mat4_t* mat) {
 
 bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
     float det = mat4_determinant(mat);
-    if (fabs(det) < 1e-6f) { // Handle numerical stability
+    if (fabs(det) < FLT_EPSILON) { // Handle numerical stability
         return false; // Matrix is not invertible
     }
 
@@ -224,19 +225,22 @@ bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
 
 #pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
-    // | (w/h)/1/tan(fov/2)             0              0                 0 |
-    // |                  0  1/tan(fov/2)              0                 0 |
-    // |                  0             0     zf/(zf-zn)  (-zf*zn)/(zf-zn) |
-    // |                  0             0              1                 0 |
+    // | 1/tan(fov/2)/aspect      0               0                 0        |
+    // |        0            1/tan(fov/2)         0                 0        |
+    // |        0                 0        (zf+zn)/(zf-zn)  (-zf*zn)/(zf-zn) |
+    // |        0                 0               1                 0        |
 
-    float ctanFov = 1.0f / tanf(fov / 2.0f);
+    const float ctanFov = 1.0f / tanf(fov * 0.5f);
+    const float xScale = ctanFov / aspect;
+    const float yScale = ctanFov;
+	const float zDiff = zfar - znear;
 
-    mat4_t m = { {{ 0.0f }} };
-    m.m[0][0] = aspect / ctanFov;
-    m.m[1][1] = ctanFov;
-    m.m[2][2] = zfar / (zfar - znear);
-    m.m[2][3] = (-zfar * znear) / (zfar - znear);
-    m.m[3][2] = 1.0f; // right-handed coordinate system
+    mat4_t m = {{{ 0.0f }}};
+    m.m[0][0] = xScale;
+    m.m[1][1] = yScale;
+    m.m[2][2] = (zfar + znear) / zDiff;
+    m.m[2][3] = (-zfar * znear) / zDiff;
+    m.m[3][2] = 1.0f;
     return m;
 }
 
@@ -259,10 +263,8 @@ mat4_t mat4_orthographic(const float left, const float right, const float bottom
 
 mat4_t mat4_look_at(const vec3_t* eye, const vec3_t* target, const vec3_t* up) {
     // Compute the forward (z), right (x), and up (y) vectors
-    vec3_t z = vec3_sub(target, eye);
-    vec3_normalize(&z);
-    vec3_t x = vec3_cross(up, &z);
-    vec3_normalize(&x);
+    vec3_t z = vec3_normalized(vec3_sub(target, eye));
+    vec3_t x = vec3_normalized(vec3_cross(up, &z));
     vec3_t y = vec3_cross(&z, &x);
 
     // | x.x   x.y   x.z  -dot(x,eye) |

@@ -138,13 +138,13 @@ vec3_t vec3_unit_vector(const vec3_t* v) {
     return result;
 }
 
-vec3_t vec3_normalized(const vec3_t* v) {
-    float length = vec3_magnitude(v);
+vec3_t vec3_normalized(vec3_t v) {
+    float length = vec3_magnitude(&v);
     if (length == 0.0f) {
         // Return a default direction if the vector is zero-length
         return (vec3_t) { 0.0f, 0.0f, 1.0f };
     }
-    return (vec3_t) { v->x / length, v->y / length, v->z / length };
+    return (vec3_t) { v.x / length, v.y / length, v.z / length };
 }
 
 vec3_t vec3_cross(const vec3_t* a, const vec3_t* b) {

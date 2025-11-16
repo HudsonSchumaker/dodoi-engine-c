@@ -95,7 +95,7 @@ vec3_t vec3_rotate_z(const vec3_t* v, const float rz);
 vec3_t vec3_cross(const vec3_t* a, const vec3_t* b);
 vec3_t vec3_normal(const vec3_t* v);
 vec3_t vec3_unit_vector(const vec3_t* v);
-vec3_t vec3_normalized(const vec3_t* v);
+vec3_t vec3_normalized(vec3_t v);
 
 float vec3_dot(const vec3_t* a, const vec3_t* b);
 float vec3_magnitude(const vec3_t* v);
