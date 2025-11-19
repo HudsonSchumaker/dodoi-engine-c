@@ -8,6 +8,7 @@
 */
 #include "../../include/de_util.h"
 #include "../../include/de_math.h"
+#include "../../include/simd_math.h"
 #include "../../include/de_game_object.h"
 
 void game_object_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture) {
@@ -68,6 +69,10 @@ void game_object_rotate(game_object_t* go, const vec3_t* rotation) {
 	mat4_t rotation_matrix_y = mat4_make_rotation_y(deg_to_radf(rotation->y));
 	mat4_t rotation_matrix_z = mat4_make_rotation_z(deg_to_radf(rotation->z));
 
+	mat4 m;
+	mat4_to_array(&rotation_matrix_z, &m.m);
+
+
 	go->model = mat4_mul_mat4_sse(&rotation_matrix_z, &go->model);
 	go->model = mat4_mul_mat4_sse(&rotation_matrix_y, &go->model);
 	go->model = mat4_mul_mat4_sse(&rotation_matrix_x, &go->model);
@@ -78,61 +83,38 @@ void game_object_translate(game_object_t* go, const vec3_t* position) {
 	go->model = mat4_mul_mat4_sse(&translation_matrix, &go->model);
 }
 
-bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray, int i) {
-    // Define the object's bounding box in world space
-    vec3_t min = {
-        go->position.x - go->scale.x * 0.5f,
-        go->position.y - go->scale.y * 0.5f,
-        go->position.z - go->scale.z * 0.5f
+bool ray_intersects_sphere(const ray_t* ray, const vec3_t* sphere_center, float sphere_radius) {
+    vec3_t oc = {
+        ray->origin.x - sphere_center->x,
+        ray->origin.y - sphere_center->y,
+        ray->origin.z - sphere_center->z
     };
 
-    vec3_t max = {
-        go->position.x + go->scale.x * 0.5f,
-        go->position.y + go->scale.y * 0.5f,
-        go->position.z + go->scale.z * 0.5f
-    };
+    float a = ray->direction.x * ray->direction.x +
+        ray->direction.y * ray->direction.y +
+        ray->direction.z * ray->direction.z;
 
-    printf("  Bounding Box Min: (%f, %f, %f)\n", min.x, min.y, min.z);
-    printf("  Bounding Box Max: (%f, %f, %f)\n", max.x, max.y, max.z);
+    float b = 2.0f * (oc.x * ray->direction.x +
+        oc.y * ray->direction.y +
+        oc.z * ray->direction.z);
 
-    // Avoid division by zero (or very close to it)
-    float inv_dir_x = (ray->direction.x != 0.0f) ? 1.0f / ray->direction.x : FLT_MAX;
-    float inv_dir_y = (ray->direction.y != 0.0f) ? 1.0f / ray->direction.y : FLT_MAX;
-    float inv_dir_z = (ray->direction.z != 0.0f) ? 1.0f / ray->direction.z : FLT_MAX;
+    float c = oc.x * oc.x + oc.y * oc.y + oc.z * oc.z - sphere_radius * sphere_radius;
 
-    float t1 = (min.x - ray->origin.x) * inv_dir_x;
-    float t2 = (max.x - ray->origin.x) * inv_dir_x;
-    float tmin = fminf(t1, t2);
-    float tmax = fmaxf(t1, t2);
+    float discriminant = b * b - 4 * a * c;
 
-    float ty1 = (min.y - ray->origin.y) * inv_dir_y;
-    float ty2 = (max.y - ray->origin.y) * inv_dir_y;
-    float tymin = fminf(ty1, ty2);
-    float tymax = fmaxf(ty1, ty2);
+    if (discriminant < 0) {
+        return false; // No intersection
+    }
+    else {
+        // Optionally, calculate the intersection points t1 and t2
+        float t1 = (-b - sqrtf(discriminant)) / (2.0f * a);
+        float t2 = (-b + sqrtf(discriminant)) / (2.0f * a);
 
-    if ((tmin > tymax) || (tymin > tmax)) return false;
-    if (tymin > tmin) tmin = tymin;
-    if (tymax < tmax) tmax = tymax;
+        // You can use t1 and t2 to determine where the ray intersects the sphere
+        return true;
+    }
+}
 
-    float tz1 = (min.z - ray->origin.z) * inv_dir_z;
-    float tz2 = (max.z - ray->origin.z) * inv_dir_z;
-    float tzmin = fminf(tz1, tz2);
-    float tzmax = fmaxf(tz1, tz2);
-
-    if ((tmin > tzmax) || (tzmin > tmax)) return false;
-    if (tzmin > tmin) tmin = tzmin;
-    if (tzmax < tmax) tmax = tzmax;
-
-    // Intersection is valid if tmin is positive (in front of the camera)
-    if (tmin < 0.0f) return false;
-
-    // Debug output
-    printf("Object %d intersected!\n", i);
-    printf("  Bounding Box Min: (%f, %f, %f)\n", min.x, min.y, min.z);
-    printf("  Bounding Box Max: (%f, %f, %f)\n", max.x, max.y, max.z);
-    printf("  Ray Origin: (%f, %f, %f)\n", ray->origin.x, ray->origin.y, ray->origin.z);
-    printf("  Ray Direction: (%f, %f, %f)\n", ray->direction.x, ray->direction.y, ray->direction.z);
-    printf("  tmin: %f, tmax: %f\n", tmin, tmax);
-
-    return true;
+bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray) {
+	return ray_intersects_sphere(ray, &go->position, 1.5f);
 }
