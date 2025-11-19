@@ -30,8 +30,6 @@ material_t* material_new(vec3_t ambient, vec3_t diffuse, vec3_t specular, float 
 	return material;
 }
 
-#include "../../include/de_material.h"
-
 material_t material_emerald(void) {
     return (material_t) {
         .ambient = vec3_new(0.0215f, 0.1745f, 0.0215f),
