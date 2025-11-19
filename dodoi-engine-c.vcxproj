@@ -207,6 +207,7 @@
     <ClInclude Include="src\include\de_vector.h" />
     <ClInclude Include="src\include\de_program.h" />
     <ClInclude Include="src\include\de_shader.h" />
+    <ClInclude Include="src\include\simd_math.h" />
     <ClInclude Include="src\playground\quad_screen.h" />
     <ClInclude Include="src\playground\splash_screen.h" />
     <ClInclude Include="src\playground\title_screen.h" />
