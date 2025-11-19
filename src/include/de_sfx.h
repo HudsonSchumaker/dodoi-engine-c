@@ -1,4 +1,4 @@
-#pragma once/**
+/**
 * @file sfx.h
 * @author Hudson Schumaker
 * @version 1.0.0
