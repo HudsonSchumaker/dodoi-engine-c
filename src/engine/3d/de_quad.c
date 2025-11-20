@@ -29,7 +29,7 @@ void quad_init(quad_t* quad, const char* vertex_shader, const char* fragment_sha
 	ebo_set_data(&quad->go.ebo, indices, sizeof(indices));
 	vao_link_vbo_3f2f();
 
-	buffer_bind(&quad->go.vao, &quad->go.vbo, &quad->go.ebo);
+	buffer_unbind();
 }
 
 void quad_render(quad_t* quad) {
@@ -39,9 +39,7 @@ void quad_render(quad_t* quad) {
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	ebo_unbind();
-	vbo_unbind();
-	vao_unbind();
+	buffer_unbind();
 	program_unset();
 }
 
