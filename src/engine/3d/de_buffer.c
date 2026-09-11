@@ -7,7 +7,6 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_buffer.h"
-#include "../../include/de_util.h"
 
 void buffer_init(vao_t* vao, vbo_t* vbo, ebo_t* ebo) {
 	vao_init(vao);
