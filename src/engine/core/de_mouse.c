@@ -74,7 +74,7 @@ vec3_t mouse_ray_world(const mat4_t* inverse_view_matrix, const vec4_t* ray_eye)
     vec3_t ray_world_vec3 = vec4_to_vec3(&ray_world);
 
     printf("Before normalized Ray World: (%f, %f, %f)\n", ray_world.x, ray_world.y, ray_world.z);
-    vec3_t ray_world_normalized = vec3_normalized(&ray_world_vec3);
+    vec3_t ray_world_normalized = vec3_normalized(ray_world_vec3);
 	return ray_world_normalized;
 }
 
