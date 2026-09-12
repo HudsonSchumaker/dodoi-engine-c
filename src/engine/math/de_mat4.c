@@ -225,25 +225,25 @@ bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
 
 #pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
-    // | 1/tan(fov/2)/aspect      0               0                 0        |
-    // |        0            1/tan(fov/2)         0                 0        |
-    // |        0                 0        (zf+zn)/(zf-zn)  (-zf*zn)/(zf-zn) |
-    // |        0                 0               1                 0        |
+    // OpenGL RH clip space, z in [-1, 1]
+    // | 1/tan(fov/2)/aspect      0                  0                    0        |
+    // |        0            1/tan(fov/2)            0                    0        |
+    // |        0                 0        -(zf+zn)/(zf-zn)  -(2*zf*zn)/(zf-zn)    |
+    // |        0                 0               -1                      0        |
 
     const float ctanFov = 1.0f / tanf(fov * 0.5f);
     const float xScale = ctanFov / aspect;
     const float yScale = ctanFov;
-	const float zDiff = zfar - znear;
+    const float zDiff = zfar - znear;
 
-    mat4_t m = {{{ 0.0f }}};
+    mat4_t m = { {{ 0.0f }} };
     m.m[0][0] = xScale;
     m.m[1][1] = yScale;
-    m.m[2][2] = (zfar + znear) / zDiff;
-    m.m[2][3] = (-zfar * znear) / zDiff;
-    m.m[3][2] = 1.0f;
+    m.m[2][2] = -(zfar + znear) / zDiff;
+    m.m[2][3] = -(2.0f * zfar * znear) / zDiff;
+    m.m[3][2] = -1.0f;
     return m;
 }
-
 mat4_t mat4_orthographic(const float left, const float right, const float bottom, const float top, const float z_near, const float z_far) {
     // | 2/(r-l)    0        0    -(r+l)/(r-l) |
     // |    0     2/(t-b)    0    -(t+b)/(t-b) |
