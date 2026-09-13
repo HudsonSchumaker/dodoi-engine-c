@@ -81,6 +81,9 @@ vec3_t vec3_mul(const vec3_t* v, const float s) {
 }
 
 vec3_t vec3_div(const vec3_t* v, const float s) {
+	if (s == 0.0f) {
+		return vec3_zero();
+	}
     return vec3_new(v->x / s, v->y / s, v->z / s);
 }
 
@@ -123,28 +126,25 @@ vec3_t vec3_rotate_z(const vec3_t* v, const float rz) {
     return rotated_vector;
 }
 
-vec3_t vec3_normal(const vec3_t* v) {
-    return vec3_new(-v->y, v->x, 0);
-}
-
-vec3_t vec3_unit_vector(const vec3_t* v) {
-    vec3_t result = vec3_new(0.0f, 0.0f, 0.0f);
-    float length = vec3_magnitude(v);
-    if (length != 0.0) {
-        result.x = v->x / length;
-        result.y = v->y / length;
-        result.z = v->z / length;
-    }
-    return result;
-}
-
 vec3_t vec3_normalized(vec3_t v) {
     float length = vec3_magnitude(&v);
     if (length == 0.0f) {
-        // Return a default direction if the vector is zero-length
         return (vec3_t) { 0.0f, 0.0f, 1.0f };
     }
     return (vec3_t) { v.x / length, v.y / length, v.z / length };
+}
+
+void vec3_normalize(vec3_t* v) {
+    float length = vec3_magnitude(v);
+    if (length == 0.0f) {
+        v->x = 0.0f;
+        v->y = 0.0f;
+        v->z = 1.0f;
+        return;
+    }
+    v->x /= length;
+    v->y /= length;
+    v->z /= length;
 }
 
 vec3_t vec3_cross(const vec3_t* a, const vec3_t* b) {
@@ -154,20 +154,6 @@ vec3_t vec3_cross(const vec3_t* a, const vec3_t* b) {
         .z = a->x * b->y - a->y * b->x
     };
     return result;
-}
-
-void vec3_normalize(vec3_t* v) {
-    float length = vec3_magnitude(v);
-    if (length == 0.0f) {
-		// Return a default direction if the vector is zero-length
-		v->x = 0.0f;
-		v->y = 0.0f;
-		v->z = 1.0f;
-		return;
-    }
-    v->x /= length;
-    v->y /= length;
-    v->z /= length;
 }
 
 void vec3_scale(vec3_t* v, float s) {
