@@ -9,7 +9,7 @@
 #include "../../include/de_buffer.h"
 
 ebo_t* ebo_new(void) {
-	ebo_t* ebo = (ebo_t*)malloc(sizeof(ebo_t));
+	ebo_t* ebo = malloc(sizeof(ebo_t));
 	if (ebo == NULL) {
 		fprintf(stderr, "failed to allocate memory for ebo.\n");
 		exit(EXIT_FAILURE);

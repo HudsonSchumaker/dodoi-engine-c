@@ -7,10 +7,10 @@
 * @copyright Copyright (c) 2024, Dodoi-Lab
 */
 #include "../../include/de_buffer.h"
-void tbo_flip_surface(SDL_Surface* surface);
+static void tbo_flip_surface(SDL_Surface* surface);
 
 tbo_t* tbo_new(void) {
-	tbo_t* tbo = (tbo_t*)malloc(sizeof(tbo_t));
+	tbo_t* tbo = malloc(sizeof(tbo_t));
 	if (tbo == NULL) {
 		fprintf(stderr, "failed to allocate memory for tbo.\n");
 		exit(EXIT_FAILURE);
@@ -60,8 +60,16 @@ bool tbo_load(tbo_t* tbo) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, surface->pitch / surface->format->BytesPerPixel);
+
     glTexImage2D(GL_TEXTURE_2D, 0, format, tbo->width, tbo->height, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
     SDL_FreeSurface(surface);
     return true;
@@ -85,7 +93,7 @@ void tbo_destroy(tbo_t* tbo) {
 	free(tbo);
 }
 
-void tbo_flip_surface(SDL_Surface* surface) {
+static void tbo_flip_surface(SDL_Surface* surface) {
     if (SDL_LockSurface(surface) < 0) {
         fprintf(stderr, "failed to lock surface.\n");
         return; // Failed to lock surface

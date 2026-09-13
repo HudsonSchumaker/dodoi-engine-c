@@ -9,7 +9,7 @@
 #include "../../include/de_buffer.h"
 
 vao_t* vao_new(void) {
-	vao_t* vao = (vao_t*)malloc(sizeof(vao_t));
+	vao_t* vao = malloc(sizeof(vao_t));
 	if (vao == NULL) {
 		fprintf(stderr, "failed to allocate memory for vao.\n");
 		exit(EXIT_FAILURE);

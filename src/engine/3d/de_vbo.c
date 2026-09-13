@@ -9,7 +9,7 @@
 #include "../../include/de_buffer.h"
 
 vbo_t* vbo_new(void) {
-	vbo_t* vbo = (vbo_t*)malloc(sizeof(vbo_t));
+	vbo_t* vbo = malloc(sizeof(vbo_t));
 	if (vbo == NULL) {
 		fprintf(stderr, "failed to allocate memory for vbo.\n");
 		exit(EXIT_FAILURE);
