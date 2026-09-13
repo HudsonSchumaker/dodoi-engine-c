@@ -10,7 +10,7 @@
 #include "../../include/de_camera.h"
 
 fps_camera_t* fps_camera_new(vec3_t position, vec3_t target) {
-	fps_camera_t* camera = (fps_camera_t*)malloc(sizeof(fps_camera_t));
+	fps_camera_t* camera = malloc(sizeof(fps_camera_t));
 	if (camera == NULL) {
 		fprintf(stderr, "failed to allocate memory for fps camera.\n");
 		exit(EXIT_FAILURE);

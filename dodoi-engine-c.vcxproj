@@ -74,11 +74,13 @@
     <ExternalIncludePath>C:\Libs\SDL2\sdl2\include;C:\Libs\SDL2\sdl2_ttf\include;C:\Libs\SDL2\sdl2_mixer\include;C:\Libs\SDL2\sdl2_image\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Libs\SDL2\sdl2\lib\x64;C:\Libs\SDL2\sdl2_ttf\lib\x64;C:\Libs\SDL2\sdl2_mixer\lib\x64;C:\Libs\SDL2\sdl2_image\lib\x64;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir)src\include;$(IncludePath)</IncludePath>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)src\include;$(IncludePath)</IncludePath>
     <ExternalIncludePath>C:\Libs\SDL2\sdl2\include;C:\Libs\SDL2\sdl2_ttf\include;C:\Libs\SDL2\sdl2_mixer\include;C:\Libs\SDL2\sdl2_image\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Libs\SDL2\sdl2\lib\x64;C:\Libs\SDL2\sdl2_ttf\lib\x64;C:\Libs\SDL2\sdl2_mixer\lib\x64;C:\Libs\SDL2\sdl2_image\lib\x64;$(LibraryPath)</LibraryPath>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

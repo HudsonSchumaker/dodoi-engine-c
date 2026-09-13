@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------------
+// basic.vert by Hudson Schumaker
+// Copyright (c) 2020-2025 SchumakerTeam. All Rights Reserved.
+//
+// Vertex shader for basic rendering.
+//-----------------------------------------------------------------------------
+
 #version 410
 
 layout (location = 0) in vec3 aPos;

@@ -98,7 +98,7 @@ SDL_GLContext* gfx_get_context(void) {
 }
 
 float gfx_get_aspect_ratio(void) {
-    return (float)GFX_WINDOW_WIDTH / GFX_WINDOW_HEIGHT;
+    return (float)GFX_WINDOW_WIDTH / (float)GFX_WINDOW_HEIGHT;
 }
 
 ipair_t gfx_get_window_size(void) {
