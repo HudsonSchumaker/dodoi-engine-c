@@ -104,23 +104,23 @@ vec4_t mat4_mul_vec4(const mat4_t* m, const vec4_t* v) {
 }
 
 vec4_t mat4_mul_vec4_sse(const mat4_t* m, const vec4_t* v) {
-    vec4_t result;
-    __m128 col1 = _mm_load_ps(&m->m[0][0]);
-    __m128 col2 = _mm_load_ps(&m->m[1][0]);
-    __m128 col3 = _mm_load_ps(&m->m[2][0]);
-    __m128 col4 = _mm_load_ps(&m->m[3][0]);
+    __m128 vec = _mm_loadu_ps(&v->x);
+    __m128 row0 = _mm_load_ps(&m->m[0][0]);
+    __m128 row1 = _mm_load_ps(&m->m[1][0]);
+    __m128 row2 = _mm_load_ps(&m->m[2][0]);
+    __m128 row3 = _mm_load_ps(&m->m[3][0]);
 
-    __m128 vec = _mm_set_ps(v->w, v->z, v->y, v->x);
+    // Each output component = dot(row_i, v) — matches mat4_mul_vec4's row-major M*v.
+    __m128 x = _mm_dp_ps(row0, vec, 0xF1);
+    __m128 y = _mm_dp_ps(row1, vec, 0xF2);
+    __m128 z = _mm_dp_ps(row2, vec, 0xF4);
+    __m128 w = _mm_dp_ps(row3, vec, 0xF8);
 
-    __m128 res = _mm_add_ps(
-        _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x00), col1),
-        _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0x55), col2)),
-        _mm_add_ps(_mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xAA), col3),
-        _mm_mul_ps(_mm_shuffle_ps(vec, vec, 0xFF), col4))
-    );
+    __m128 result = _mm_or_ps(_mm_or_ps(x, y), _mm_or_ps(z, w));
 
-    _mm_store_ps(&result.x, res);
-    return result;
+    vec4_t out;
+    _mm_store_ps(&out.x, result);
+    return out;
 }
 
 mat4_t mat4_mul_mat4(const mat4_t* a, const mat4_t* b) {
@@ -176,49 +176,60 @@ float mat4_determinant(const mat4_t* mat) {
 }
 
 bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
-    float det = mat4_determinant(mat);
-    if (fabs(det) < FLT_EPSILON) { // Handle numerical stability
-        return false; // Matrix is not invertible
+    float a[4][8]; // [source | identity] augmented matrix
+
+    for (byte i = 0; i < 4; i++) {
+        for (byte j = 0; j < 4; j++) {
+            a[i][j] = mat->m[i][j];
+            a[i][j + 4] = (i == j) ? 1.0f : 0.0f;
+        }
     }
 
-    float inv_det = 1.0f / det;
+    for (byte col = 0; col < 4; col++) {
+        // Partial pivoting: find the row with the largest absolute value in this column.
+        int pivot_row = col;
+        float max_val = fabsf(a[col][col]);
+        for (byte row = col + 1; row < 4; row++) {
+            float val = fabsf(a[row][col]);
+            if (val > max_val) {
+                max_val = val;
+                pivot_row = row;
+            }
+        }
 
-    // Precompute reusable sub-determinants
-    float sub1 = mat->m[2][2] * mat->m[3][3] - mat->m[2][3] * mat->m[3][2];
-    float sub2 = mat->m[2][1] * mat->m[3][3] - mat->m[2][3] * mat->m[3][1];
-    float sub3 = mat->m[2][1] * mat->m[3][2] - mat->m[2][2] * mat->m[3][1];
-    float sub4 = mat->m[2][0] * mat->m[3][3] - mat->m[2][3] * mat->m[3][0];
-    float sub5 = mat->m[2][0] * mat->m[3][2] - mat->m[2][2] * mat->m[3][0];
-    float sub6 = mat->m[2][0] * mat->m[3][1] - mat->m[2][1] * mat->m[3][0];
+        if (max_val < FLT_EPSILON) {
+            return false; // Matrix is not invertible
+        }
 
-    // Compute the adjugate matrix (cofactor matrix transposed)
-    result->m[0][0] = (mat->m[1][1] * sub1 - mat->m[1][2] * sub2 + mat->m[1][3] * sub3) * inv_det;
-    result->m[0][1] = -(mat->m[0][1] * sub1 - mat->m[0][2] * sub2 + mat->m[0][3] * sub3) * inv_det;
-    result->m[0][2] = (mat->m[0][1] * sub4 - mat->m[0][2] * sub5 + mat->m[0][3] * sub6) * inv_det;
-    result->m[0][3] = -(mat->m[0][1] * (mat->m[1][2] * mat->m[2][3] - mat->m[1][3] * mat->m[2][2]) -
-        mat->m[0][2] * (mat->m[1][1] * mat->m[2][3] - mat->m[1][3] * mat->m[2][1]) +
-        mat->m[0][3] * (mat->m[1][1] * mat->m[2][2] - mat->m[1][2] * mat->m[2][1])) * inv_det;
+        if (pivot_row != col) {
+            for (byte k = 0; k < 8; k++) {
+                float tmp = a[col][k];
+                a[col][k] = a[pivot_row][k];
+                a[pivot_row][k] = tmp;
+            }
+        }
 
-    result->m[1][0] = -(mat->m[1][0] * sub1 - mat->m[1][2] * sub4 + mat->m[1][3] * sub5) * inv_det;
-    result->m[1][1] = (mat->m[0][0] * sub1 - mat->m[0][2] * sub4 + mat->m[0][3] * sub5) * inv_det;
-    result->m[1][2] = -(mat->m[0][0] * sub2 - mat->m[0][1] * sub4 + mat->m[0][3] * sub6) * inv_det;
-    result->m[1][3] = (mat->m[0][0] * (mat->m[1][2] * mat->m[2][3] - mat->m[1][3] * mat->m[2][2]) -
-        mat->m[0][1] * (mat->m[1][0] * mat->m[2][3] - mat->m[1][3] * mat->m[2][0]) +
-        mat->m[0][3] * (mat->m[1][0] * mat->m[2][2] - mat->m[1][2] * mat->m[2][0])) * inv_det;
+        // Normalize pivot row.
+        float pivot = a[col][col];
+        for (byte k = 0; k < 8; k++) {
+            a[col][k] /= pivot;
+        }
 
-    result->m[2][0] = (mat->m[1][0] * sub2 - mat->m[1][1] * sub4 + mat->m[1][3] * sub6) * inv_det;
-    result->m[2][1] = -(mat->m[0][0] * sub2 - mat->m[0][1] * sub4 + mat->m[0][3] * sub6) * inv_det;
-    result->m[2][2] = (mat->m[0][0] * sub3 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
-    result->m[2][3] = -(mat->m[0][0] * (mat->m[1][1] * mat->m[2][3] - mat->m[1][3] * mat->m[2][1]) -
-        mat->m[0][1] * (mat->m[1][0] * mat->m[2][3] - mat->m[1][3] * mat->m[2][0]) +
-        mat->m[0][3] * (mat->m[1][0] * mat->m[2][1] - mat->m[1][1] * mat->m[2][0])) * inv_det;
+        // Eliminate this column from all other rows.
+        for (byte row = 0; row < 4; row++) {
+            if (row == col) continue;
+            float factor = a[row][col];
+            for (byte k = 0; k < 8; k++) {
+                a[row][k] -= factor * a[col][k];
+            }
+        }
+    }
 
-    result->m[3][0] = -(mat->m[1][0] * sub3 - mat->m[1][1] * sub5 + mat->m[1][2] * sub6) * inv_det;
-    result->m[3][1] = (mat->m[0][0] * sub3 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
-    result->m[3][2] = -(mat->m[0][0] * sub4 - mat->m[0][1] * sub5 + mat->m[0][2] * sub6) * inv_det;
-    result->m[3][3] = (mat->m[0][0] * (mat->m[1][1] * mat->m[2][2] - mat->m[1][2] * mat->m[2][1]) -
-        mat->m[0][1] * (mat->m[1][0] * mat->m[2][2] - mat->m[1][2] * mat->m[2][0]) +
-        mat->m[0][2] * (mat->m[1][0] * mat->m[2][1] - mat->m[1][1] * mat->m[2][0])) * inv_det;
+    for (byte i = 0; i < 4; i++) {
+        for (byte j = 0; j < 4; j++) {
+            result->m[i][j] = a[i][j + 4];
+        }
+    }
 
     return true;
 }
@@ -226,10 +237,10 @@ bool mat4_inverse(const mat4_t* mat, mat4_t* result) {
 #pragma intrinsic(tanf)
 mat4_t mat4_perspective(const float fov, const float aspect, const float znear, const float zfar) {
     // OpenGL RH clip space, z in [-1, 1]
-    // | 1/tan(fov/2)/aspect      0                  0                    0        |
-    // |        0            1/tan(fov/2)            0                    0        |
-    // |        0                 0        -(zf+zn)/(zf-zn)  -(2*zf*zn)/(zf-zn)    |
-    // |        0                 0               -1                      0        |
+    // | 1/tan(fov/2)/aspect      0                  0                    0     |
+    // |        0            1/tan(fov/2)            0                    0     |
+    // |        0                 0        -(zf+zn)/(zf-zn)  -(2*zf*zn)/(zf-zn) |
+    // |        0                 0               -1                      0     |
 
     const float ctanFov = 1.0f / tanf(fov * 0.5f);
     const float xScale = ctanFov / aspect;
@@ -264,8 +275,8 @@ mat4_t mat4_orthographic(const float left, const float right, const float bottom
 mat4_t mat4_look_at(const vec3_t* eye, const vec3_t* target, const vec3_t* up) {
     // Compute the forward (z), right (x), and up (y) vectors
     vec3_t z = vec3_normalized(vec3_sub(target, eye));
-    vec3_t x = vec3_normalized(vec3_cross(up, &z));
-    vec3_t y = vec3_cross(&z, &x);
+    vec3_t x = vec3_normalized(vec3_cross(&z, up));
+    vec3_t y = vec3_cross(&x, &z);
 
     // | x.x   x.y   x.z  -dot(x,eye) |
     // | y.x   y.y   y.z  -dot(y,eye) |
