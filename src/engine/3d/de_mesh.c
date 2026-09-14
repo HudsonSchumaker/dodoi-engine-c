@@ -11,7 +11,7 @@
 #include "../../include/de_obj_loader.h"
 
 mesh_t* mesh_new(void) {
-	mesh_t* mesh = (mesh_t*)malloc(sizeof(mesh_t));
+	mesh_t* mesh = malloc(sizeof(mesh_t));
 	if (mesh == NULL) {
 		fprintf(stderr, "failed to allocate memory for mesh.\n");
 		exit(EXIT_FAILURE);
@@ -26,7 +26,7 @@ void mesh_load_obj(mesh_t* mesh, const char* path) {
 
 unsigned int* mesh_index_to_gl_buffer(mesh_t* mesh) {
 	int face_count = mesh->face_count;
-	unsigned int* buffer = (int*)malloc(sizeof(int) * face_count * 3);
+	unsigned int* buffer = malloc(sizeof(int) * face_count * 3);
 	if (buffer == NULL) {
 		fprintf(stderr, "failed to allocate memory for buffer.\n");
 		exit(EXIT_FAILURE);
@@ -42,7 +42,7 @@ unsigned int* mesh_index_to_gl_buffer(mesh_t* mesh) {
 
 float* mesh_vertex_to_gl_buffer(mesh_t* mesh) {
 	int vertex_count = mesh->vertex_count;
-	float* buffer = (float*)malloc(sizeof(float) * vertex_count * 8);
+	float* buffer = malloc(sizeof(float) * vertex_count * 8);
 	if (buffer == NULL) {
 		fprintf(stderr, "Failed to allocate memory for buffer.\n");
 		exit(EXIT_FAILURE);
@@ -59,6 +59,31 @@ float* mesh_vertex_to_gl_buffer(mesh_t* mesh) {
 		buffer[i * 8 + 7] = vertex->uv.v;
 	}
 	return buffer;
+}
+
+float mesh_compute_bounding_radius(const mesh_t* mesh) {
+	if (mesh == NULL || mesh->vertices == NULL || mesh->vertex_count == 0) {
+		return 0.0f;
+	}
+
+	// Compute the centroid (average position) of all vertices.
+	vec3_t centroid = vec3_zero();
+	for (int i = 0; i < mesh->vertex_count; i++) {
+		centroid = vec3_add(&centroid, &mesh->vertices[i].position);
+	}
+	centroid = vec3_div(&centroid, (float)mesh->vertex_count);
+
+	// Find the maximum distance from the centroid to any vertex.
+	float max_dist_sq = 0.0f;
+	for (int i = 0; i < mesh->vertex_count; i++) {
+		vec3_t offset = vec3_sub(&mesh->vertices[i].position, &centroid);
+		float dist_sq = vec3_magnitude_squared(&offset);
+		if (dist_sq > max_dist_sq) {
+			max_dist_sq = dist_sq;
+		}
+	}
+
+	return sqrtf(max_dist_sq);
 }
 
 void mesh_delete(mesh_t* mesh) {

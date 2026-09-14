@@ -50,6 +50,7 @@ void game_object_init(game_object_t* go, const char* vertex_shader, const char* 
 void game_object_3d_init(game_object_t* go, const char* vertex_shader, const char* fragment_shader, const char* texture, const char* model) {
 	game_object_init(go, vertex_shader, fragment_shader, texture);
 	mesh_load_obj(&go->mesh, model);
+	go->bounding_radius = mesh_compute_bounding_radius(&go->mesh);
 }
 
 void game_object_update_model_matrix(game_object_t* go) {
@@ -61,7 +62,7 @@ void game_object_update_model_matrix(game_object_t* go) {
 
 void game_object_scale(game_object_t* go, const vec3_t* scale) {
 	mat4_t scale_matrix = mat4_make_scale(scale->x, scale->y, scale->z);
-	go->model = mat4_mul_mat4_sse(&scale_matrix, &go->model);
+	go->model = mat4_mul_mat4(&scale_matrix, &go->model);
 }
 
 void game_object_rotate(game_object_t* go, const vec3_t* rotation) {
@@ -69,52 +70,49 @@ void game_object_rotate(game_object_t* go, const vec3_t* rotation) {
 	mat4_t rotation_matrix_y = mat4_make_rotation_y(deg_to_radf(rotation->y));
 	mat4_t rotation_matrix_z = mat4_make_rotation_z(deg_to_radf(rotation->z));
 
-	mat4 m;
-	mat4_to_array(&rotation_matrix_z, &m.m);
-
-
-	go->model = mat4_mul_mat4_sse(&rotation_matrix_z, &go->model);
-	go->model = mat4_mul_mat4_sse(&rotation_matrix_y, &go->model);
-	go->model = mat4_mul_mat4_sse(&rotation_matrix_x, &go->model);
+	go->model = mat4_mul_mat4(&rotation_matrix_z, &go->model);
+	go->model = mat4_mul_mat4(&rotation_matrix_y, &go->model);
+	go->model = mat4_mul_mat4(&rotation_matrix_x, &go->model);
 }
 
 void game_object_translate(game_object_t* go, const vec3_t* position) {
 	mat4_t translation_matrix = mat4_make_translation(position->x, position->y, position->z);
-	go->model = mat4_mul_mat4_sse(&translation_matrix, &go->model);
+	go->model = mat4_mul_mat4(&translation_matrix, &go->model);
 }
 
-bool ray_intersects_sphere(const ray_t* ray, const vec3_t* sphere_center, float sphere_radius) {
-    vec3_t oc = {
-        ray->origin.x - sphere_center->x,
-        ray->origin.y - sphere_center->y,
-        ray->origin.z - sphere_center->z
-    };
+#pragma intrinsic(sqrtf)
+bool ray_intersects_sphere(const ray_t* ray, const vec3_t* sphere_center, float sphere_radius, float* out_t) {
+	vec3_t oc = {
+		ray->origin.x - sphere_center->x,
+		ray->origin.y - sphere_center->y,
+		ray->origin.z - sphere_center->z
+	};
 
-    float a = ray->direction.x * ray->direction.x +
-        ray->direction.y * ray->direction.y +
-        ray->direction.z * ray->direction.z;
+	float a = vec3_dot(&ray->direction, &ray->direction);
+	float b = 2.0f * vec3_dot(&oc, &ray->direction);
+	float c = vec3_dot(&oc, &oc) - sphere_radius * sphere_radius;
+	float discriminant = b * b - 4 * a * c;
 
-    float b = 2.0f * (oc.x * ray->direction.x +
-        oc.y * ray->direction.y +
-        oc.z * ray->direction.z);
+	if (discriminant < 0) {
+		return false;
+	}
 
-    float c = oc.x * oc.x + oc.y * oc.y + oc.z * oc.z - sphere_radius * sphere_radius;
+	float sqrt_disc = sqrtf(discriminant);
+	float t1 = (-b - sqrt_disc) / (2.0f * a);
+	float t2 = (-b + sqrt_disc) / (2.0f * a);
 
-    float discriminant = b * b - 4 * a * c;
+	// Take the nearest intersection that is in front of the ray origin.
+	float t = (t1 >= 0.0f) ? t1 : t2;
+	if (t < 0.0f) {
+		return false; // both intersections are behind the ray origin
+	}
 
-    if (discriminant < 0) {
-        return false; // No intersection
-    }
-    else {
-        // Optionally, calculate the intersection points t1 and t2
-        float t1 = (-b - sqrtf(discriminant)) / (2.0f * a);
-        float t2 = (-b + sqrtf(discriminant)) / (2.0f * a);
-
-        // You can use t1 and t2 to determine where the ray intersects the sphere
-        return true;
-    }
+	if (out_t) *out_t = t;
+	return true;
 }
 
-bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray) {
-	return ray_intersects_sphere(ray, &go->position, 1.5f);
+bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray, float* out_t) {
+	float max_scale = fmaxf(go->scale.x, fmaxf(go->scale.y, go->scale.z));
+	float world_radius = go->bounding_radius * max_scale;
+	return ray_intersects_sphere(ray, &go->position, world_radius, out_t);
 }

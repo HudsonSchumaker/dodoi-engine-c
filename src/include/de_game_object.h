@@ -20,6 +20,7 @@ typedef struct {
     vec3_t scale;
     vec3_t rotation;
     vec3_t position;
+    float  bounding_radius;
 
     vao_t vao;
     vbo_t vbo;
@@ -42,5 +43,4 @@ void game_object_update_model_matrix(game_object_t* go);
 void game_object_scale(game_object_t* go, const vec3_t* scale);
 void game_object_rotate(game_object_t* go, const vec3_t* rotation);
 void game_object_translate(game_object_t* go, const vec3_t* position);
-
-bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray, int i);
+bool game_object_ray_intersect(const game_object_t* go, const ray_t* ray, float* out_t);

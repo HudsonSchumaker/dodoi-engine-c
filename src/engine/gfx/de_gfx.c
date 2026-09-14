@@ -35,6 +35,7 @@ void gfx_init(bool fullscreen, bool vsync) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     unsigned long flags = SDL_WINDOW_OPENGL;
     flags |= SDL_WINDOW_RESIZABLE;

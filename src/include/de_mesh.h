@@ -23,4 +23,5 @@ mesh_t* mesh_new(void);
 void mesh_load_obj(mesh_t* mesh, const char* path);
 unsigned int* mesh_index_to_gl_buffer(mesh_t* mesh);
 float* mesh_vertex_to_gl_buffer(mesh_t* mesh);
+float mesh_compute_bounding_radius(const mesh_t* mesh);
 void mesh_delete(mesh_t* mesh);
