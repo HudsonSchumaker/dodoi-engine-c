@@ -12,7 +12,7 @@
 #include "../../include/de_collection.h"
 
 #define SET_INIT_CAPACITY 64
-#define SET_RESIZE_FACTOR 128
+#define SET_RESIZE_FACTOR 64
 
 void set_init(set_t* set, size_t type_size, int (*equals)(const void*, const void*)) {
 	set_init_size(set, type_size, SET_INIT_CAPACITY, equals);
@@ -43,10 +43,11 @@ bool set_contains(set_t* set, void* value) {
 void set_add(set_t* set, void* value) {
     if (!set_contains(set, value)) {
         if (set->size == set->capacity) {
-            set->capacity += SET_RESIZE_FACTOR;
-            void* new_value = realloc(set->array, set->capacity * set->type_size);
+			size_t new_capacity = set->capacity + SET_RESIZE_FACTOR;
+            void* new_value = realloc(set->array, new_capacity * set->type_size);
             if (new_value) {
 				set->array = new_value;
+				set->capacity = new_capacity;
 			}
             else {
                 fprintf(stderr, "ERROR: set_t, memory reallocation failed\n");

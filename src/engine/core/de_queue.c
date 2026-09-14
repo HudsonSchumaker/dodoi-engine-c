@@ -19,23 +19,41 @@ void queue_init(queue_t* queue, size_t type_size) {
     queue->type_size = type_size;
     queue->array = malloc(queue->capacity * queue->type_size);
     if (!queue->array) {
-        fprintf(stderr, "ERROR: queue_t, memory allocation failed\n");
+        fprintf(stderr, "ERROR: queue_t, memory allocation failed.\n");
         exit(EXIT_FAILURE);
     }
 }
 
 void queue_resize(queue_t* queue) {
-    void* new_array = malloc(queue->capacity * Q_RESIZE_FACTOR * queue->type_size);
-    if (new_array) {
-        memcpy(new_array, queue->array, queue->size * queue->type_size);
-        free(queue->array);
-        queue->array = new_array;
-        queue->capacity *= Q_RESIZE_FACTOR; // Update capacity after successful allocation
-    }
-    else {
+    size_t new_capacity = queue->capacity * Q_RESIZE_FACTOR;
+    void* new_array = malloc(new_capacity * queue->type_size);
+    if (!new_array) {
         fprintf(stderr, "ERROR: queue_t, memory reallocation failed\n");
         return;
     }
+
+    // Unwrap the circular buffer into linear order starting at index 0.
+    size_t first_chunk = queue->capacity - queue->head; // elements from head to end of old array
+    if (first_chunk > queue->size) {
+        first_chunk = queue->size; // no wraparound occurred
+    }
+    size_t second_chunk = queue->size - first_chunk; // elements wrapped at the start of the old array
+
+    memcpy(new_array,
+        (char*)queue->array + (queue->head * queue->type_size),
+        first_chunk * queue->type_size);
+
+    if (second_chunk > 0) {
+        memcpy((char*)new_array + (first_chunk * queue->type_size),
+            queue->array,
+            second_chunk * queue->type_size);
+    }
+
+    free(queue->array);
+    queue->array = new_array;
+    queue->capacity = new_capacity;
+    queue->head = 0;
+    queue->tail = queue->size; // tail sits right after the last valid element
 }
 
 void queue_add(queue_t* queue, void* value) {

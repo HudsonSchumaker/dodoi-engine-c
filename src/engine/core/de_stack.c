@@ -9,7 +9,7 @@
 #include "../../include/de_collection.h"
 
 #define STACK_INIT_CAPACITY 64
-#define STACK_RESIZE_FACTOR 128
+#define STACK_RESIZE_FACTOR 64
 
 void stack_init(stack_t* stack, size_t type_size) {
     stack->size = 0;
@@ -24,10 +24,11 @@ void stack_init(stack_t* stack, size_t type_size) {
 
 void stack_push(stack_t* stack, void* value) {
     if (stack->size == stack->capacity) {
-        stack->capacity += STACK_RESIZE_FACTOR;
-        void* new_array = realloc(stack->array, stack->capacity * stack->type_size);
+        size_t new_capacity = stack->capacity + STACK_RESIZE_FACTOR;
+        void* new_array = realloc(stack->array, new_capacity * stack->type_size);
         if (new_array) {
             stack->array = new_array;
+            stack->capacity = new_capacity;
         }
         else {
             fprintf(stderr, "ERROR: stack_t, memory reallocation failed\n");
