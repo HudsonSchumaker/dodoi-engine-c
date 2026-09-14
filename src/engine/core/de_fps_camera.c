@@ -70,7 +70,7 @@ void fps_camera_set_position(fps_camera_t* camera, vec3_t position) {
 void fps_camera_set_rotation(fps_camera_t* camera, float yaw, float pitch) {
 	camera->coords.yaw   += deg_to_radf(yaw);
 	camera->coords.pitch += deg_to_radf(pitch);
-	camera->coords.pitch =  clampf(deg_to_radf(pitch), -HALF_PI + 0.1f, HALF_PI - 0.1f);
+	camera->coords.pitch  = clampf(camera->coords.pitch, -HALF_PI + 0.1f, HALF_PI - 0.1f);
 
 	if (camera->coords.yaw >  TWO_PI) {
 		camera->coords.yaw -= TWO_PI;

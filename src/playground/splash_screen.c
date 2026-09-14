@@ -127,11 +127,11 @@ void splash_screen_input(void) {
             }
 
 			if (key == SDLK_a || key == SDLK_LEFT) {
-				direction.x = -1.0f;
+				direction.x = 1.0f;
 			}
 
 			if (key == SDLK_d || key == SDLK_RIGHT) {
-				direction.x = 1.0f;
+				direction.x = -1.0f;
 			}
 			break;
 

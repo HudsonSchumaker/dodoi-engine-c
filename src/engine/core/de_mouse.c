@@ -37,10 +37,21 @@ void handle_mouse_click(int mouse_x, int mouse_y, const mat4_t* view_matrix, con
             ray_t ray = { *camera_position, ray_world };
 
             // Check intersection with all objects
+            int hit_index = -1;
+            float closest_t = FLT_MAX;
+
             for (int i = 0; i < object_count; ++i) {
-                if (game_object_ray_intersect(&objects[i], &ray, i)) {
-                    printf("Object %d clicked!\n", i);
+                float t;
+                if (game_object_ray_intersect(&objects[i], &ray, &t)) {
+                    if (t < closest_t) {
+                        closest_t = t;
+                        hit_index = i;
+                    }
                 }
+            }
+
+            if (hit_index >= 0) {
+                printf("Object %d clicked!\n", hit_index);
             }
         }
     }
