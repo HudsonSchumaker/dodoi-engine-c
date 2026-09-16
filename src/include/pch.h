@@ -100,5 +100,5 @@
 #define BINARY_FOLDER "./data/binary/"
 
 // Game loop
-#define FPS 144
+#define FPS 144.0f
 #define FRAME_TARGET_TIME (1000 / FPS)

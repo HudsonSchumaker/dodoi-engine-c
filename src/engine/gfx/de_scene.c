@@ -33,17 +33,23 @@ float scene_manager_get_delta_time(void) {
 }
 
 float scene_manager_calculate_delta_time(void) {
-    static Uint32 millisecs_previous_frame = 0;
+    static Uint64 previous_ticks = 0;
+    Uint64 current_ticks = SDL_GetTicks64();
 
-    Uint32 current_ticks = SDL_GetTicks();
-    Uint32 frame_time = current_ticks - millisecs_previous_frame;
-    if (frame_time < FRAME_TARGET_TIME) {
-        SDL_Delay(FRAME_TARGET_TIME - frame_time);
+    if (previous_ticks == 0) {
+        previous_ticks = current_ticks;
+        return 0.0f;
     }
 
-    current_ticks = SDL_GetTicks();
-    delta_time = (current_ticks - millisecs_previous_frame) / 1000.0f;
-    millisecs_previous_frame = current_ticks;
+    Uint64 frame_ticks = current_ticks - previous_ticks;
 
+    if (frame_ticks < (Uint64)FRAME_TARGET_TIME) {
+        SDL_Delay((Uint32)(FRAME_TARGET_TIME - (float)frame_ticks));
+        current_ticks = SDL_GetTicks64();
+        frame_ticks = current_ticks - previous_ticks;
+    }
+
+    previous_ticks = current_ticks;
+    delta_time = (float)frame_ticks * 0.001f;
     return delta_time;
 }
