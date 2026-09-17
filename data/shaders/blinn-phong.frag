@@ -4,7 +4,7 @@
 //
 // Fragment shader for blinn-phong.
 //-----------------------------------------------------------------------------
-#version 410 core
+#version 460 core
 
 in vec2 TexCoord;
 in vec3 FragPos;

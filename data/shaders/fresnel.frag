@@ -1,4 +1,4 @@
-#version 410 core
+#version 460 core
 
 in vec3 FragPos;  // Fragment position in world space
 in vec3 Normal;   // Interpolated normal
