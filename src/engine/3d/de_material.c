@@ -18,7 +18,7 @@ material_t material_init(void) {
 }
 
 material_t* material_new(vec3_t ambient, vec3_t diffuse, vec3_t specular, float shininess) {
-	material_t* material = (material_t*)malloc(sizeof(material_t));
+	material_t* material = malloc(sizeof(material_t));
 	if (material == NULL) {
 		fprintf(stderr, "failed to allocate memory for material.\n");
 		exit(EXIT_FAILURE);

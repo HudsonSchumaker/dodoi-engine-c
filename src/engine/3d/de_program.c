@@ -10,7 +10,7 @@
 #include "../../include/de_collection.h"
 
 program_t* program_new(void) {
-	program_t* program = (program_t*)malloc(sizeof(program_t));
+	program_t* program = malloc(sizeof(program_t));
 	if (program == NULL) {
 		fprintf(stderr, "failed to allocate memory for program.\n");
 		exit(EXIT_FAILURE);
@@ -173,7 +173,7 @@ GLenum program_get_supported_bin_formats(void) {
 		return 0;
 	}
 
-	GLenum* formats = (GLenum*)malloc(num_formats * sizeof(GLenum));
+	GLenum* formats = malloc(num_formats * sizeof(GLenum));
 	if (formats == NULL) {
 		fprintf(stderr, "Failed to allocate memory for binary formats.\n");
 		return 0;

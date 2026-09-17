@@ -18,7 +18,7 @@ directional_light_t directional_light_init(void) {
 }
 
 directional_light_t* directional_light_new(vec3_t ambient, vec3_t diffuse, vec3_t specular, vec3_t direction) {
-	directional_light_t* light = (directional_light_t*)malloc(sizeof(directional_light_t));
+	directional_light_t* light = malloc(sizeof(directional_light_t));
 	if (light == NULL) {
 		fprintf(stderr, "failed to allocate memory for directional light.\n");
 		exit(EXIT_FAILURE);

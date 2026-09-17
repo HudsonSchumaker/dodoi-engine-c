@@ -10,7 +10,7 @@
 #include "../../include/de_camera.h"
 
 orbit_camera_t* orbit_camera_new(void) {
-	orbit_camera_t* camera = (orbit_camera_t*)malloc(sizeof(orbit_camera_t));
+	orbit_camera_t* camera = malloc(sizeof(orbit_camera_t));
 	if (camera == NULL) {
 		fprintf(stderr, "failed to allocate memory for orbit camera.\n");
 		exit(EXIT_FAILURE);
