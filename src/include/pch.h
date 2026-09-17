@@ -30,7 +30,7 @@
 #define WINDOW_HEIGHT 720
 #define WINDOW_H_WIDTH 540
 #define WINDOW_H_HEIGHT 360
-#define WINDOW_TITLE "Dodoi-Engine-C-Sdl2-Glad-OpenGL-4.1-HD"
+#define WINDOW_TITLE "Dodoi-Engine-C-Sdl2-Glad-OpenGL-4.6-HD"
 
 // Math constants
 #define VEC2 2
