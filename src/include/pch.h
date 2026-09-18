@@ -45,7 +45,7 @@
 #define DIV_180_PI 57.2957795130823208768f
 
 // 3D constants
-#define FOV 60.0f
+#define FOV 67.0f
 #define STRIDE_1f 1 * sizeof(GLfloat)
 #define STRIDE_2f 2 * sizeof(GLfloat)
 #define STRIDE_3f 3 * sizeof(GLfloat)
