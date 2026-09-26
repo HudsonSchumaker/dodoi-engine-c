@@ -50,7 +50,7 @@ void set_add(set_t* set, void* value) {
 				set->capacity = new_capacity;
 			}
             else {
-                fprintf(stderr, "ERROR: set_t, memory reallocation failed\n");
+                fprintf(stderr, "ERROR: set_t, memory reallocation failed.\n");
                 return;
             }
         }

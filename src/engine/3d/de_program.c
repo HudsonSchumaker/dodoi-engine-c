@@ -169,7 +169,7 @@ GLenum program_get_supported_bin_formats(void) {
 	GLint num_formats;
 	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &num_formats);
 	if (num_formats == 0) {
-		fprintf(stderr, "no binary files supported by the driver\n");
+		fprintf(stderr, "no binary files supported by the driver.\n");
 		return 0;
 	}
 

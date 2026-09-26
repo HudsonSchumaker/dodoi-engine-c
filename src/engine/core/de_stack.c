@@ -31,7 +31,7 @@ void stack_push(stack_t* stack, void* value) {
             stack->capacity = new_capacity;
         }
         else {
-            fprintf(stderr, "ERROR: stack_t, memory reallocation failed\n");
+            fprintf(stderr, "ERROR: stack_t, memory reallocation failed.\n");
             return;
         }
     }

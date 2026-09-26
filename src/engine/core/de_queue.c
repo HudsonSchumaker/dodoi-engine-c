@@ -28,7 +28,7 @@ void queue_resize(queue_t* queue) {
     size_t new_capacity = queue->capacity * Q_RESIZE_FACTOR;
     void* new_array = malloc(new_capacity * queue->type_size);
     if (!new_array) {
-        fprintf(stderr, "ERROR: queue_t, memory reallocation failed\n");
+        fprintf(stderr, "ERROR: queue_t, memory reallocation failed.\n");
         return;
     }
 

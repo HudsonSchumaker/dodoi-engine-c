@@ -21,7 +21,7 @@ void list_init_size(list_t* list, size_t type_size, size_t reserve) {
 	list->type_size = type_size;
 	list->array = malloc(list->capacity * list->type_size);
     if (!list->array) {
-        fprintf(stderr, "ERROR: list_t, memory allocation failed\n");
+        fprintf(stderr, "ERROR: list_t, memory allocation failed.\n");
         exit(EXIT_FAILURE);
     }
 }
@@ -34,7 +34,7 @@ void list_resize(list_t* list, size_t new_capacity) {
             list->capacity = new_capacity;
         }
         else {
-            fprintf(stderr, "ERROR: list_t, memory reallocation failed\n");
+            fprintf(stderr, "ERROR: list_t, memory reallocation failed.\n");
         }
     }
 }
