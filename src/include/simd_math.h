@@ -14,6 +14,11 @@
 // =============================
 typedef struct { __m128 m; } vec4;
 
+// =============================
+// MAT4 4x4
+// =============================
+typedef struct { float m[16]; } matx4;
+
 static inline vec4 vec4_set(float x, float y, float z, float w) {
     vec4 r; r.m = _mm_set_ps(w, z, y, x); return r;
 }
@@ -26,8 +31,6 @@ static inline vec4 vec4_sub(vec4 a, vec4 b) {
     vec4 r; r.m = _mm_sub_ps(a.m, b.m); return r;
 }
 
-typedef struct { float m[16]; } mat4;
-
 // =============================
 // VEC4 Dot Product
 // =============================
@@ -38,7 +41,6 @@ static inline float vec4_dot(vec4 a, vec4 b) {
 // =============================
 // MAT4 (4x4 matrix) operations
 // =============================
-typedef struct { float m[16]; } matx4;
 
 static inline matx4 matx4_identity() {
     matx4 M = {{
@@ -71,6 +73,5 @@ static inline matx4 mat4_mul(matx4 A, matx4 B) {
     mat4_mul_sse41(A.m, B.m, C.m);
     return C;
 }
-
 
 #endif // SIMD_MATH_H
