@@ -36,6 +36,10 @@ void gfx_init(bool fullscreen, bool vsync) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    /* 8x MSAA */
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
 
     unsigned long flags = SDL_WINDOW_OPENGL;
     flags |= SDL_WINDOW_RESIZABLE;
@@ -45,8 +49,7 @@ void gfx_init(bool fullscreen, bool vsync) {
     // Create SDL2 window
     window = SDL_CreateWindow(
         WINDOW_TITLE,
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH,
         WINDOW_HEIGHT,
         flags
@@ -87,6 +90,8 @@ void gfx_init(bool fullscreen, bool vsync) {
 
     // Enable v-sync (set 1 to enable, 0 to disable)
     SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, GFX_WINDOW_WIDTH, GFX_WINDOW_HEIGHT);
 }
 
